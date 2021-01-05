@@ -9,12 +9,18 @@ import UIKit
 
 class ToDoListVC: UIViewController {
     
+    var listItems:[ListViewModel] = []
+    
+    var userDefaults = UserDefaults()
+    
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("item.plist")
     
     var dataSource:UICollectionViewDiffableDataSource<Section, ListViewModel>!
     
     var collectionView:UICollectionView = {
         
-        let configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        configuration.backgroundColor = UIColor(red: 0.99, green: 0.97, blue: 0.91, alpha: 1.00)
         
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         
@@ -32,12 +38,6 @@ class ToDoListVC: UIViewController {
         navBarSetup()
         
         setupView()
-        
-        setupList()
-        
-        let listExample = [ListViewModel(toDoList: "Buy Milk"), ListViewModel(toDoList: "Call Apollo"), ListViewModel(toDoList: "Workout")]
-        
-        snapShot(listExample)
     }
     
     func setupList(){
@@ -58,6 +58,7 @@ class ToDoListVC: UIViewController {
             return cell
         }
         
+        snapShot(listItems)
     }
     
     func snapShot(_ listViewModel:[ListViewModel]){
@@ -73,6 +74,7 @@ class ToDoListVC: UIViewController {
         let navBarApperance = UINavigationBarAppearance()
         navBarApperance.backgroundColor = UIColor(red: 1.00, green: 0.70, blue: 0.42, alpha: 1.00)
         navBarApperance.largeTitleTextAttributes = [.foregroundColor:UIColor.white]
+        navBarApperance.titleTextAttributes = [.foregroundColor:UIColor.white]
         
         navigationController?.navigationBar.standardAppearance = navBarApperance
         navigationController?.navigationBar.scrollEdgeAppearance = navBarApperance
@@ -85,10 +87,23 @@ class ToDoListVC: UIViewController {
     
     @objc func addButton(_ sender:UIButton){
         
+        var textField = UITextField()
+        
         let alert = UIAlertController(title: "Add New To-Do Item", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add Item", style: .default) { alertAction in
-            print("Success")
+            
+            self.listItems.append(ListViewModel(toDoList: textField.text))
+            
+            self.setupList()
+            
+            self.saveData()
+            
+        }
+        
+        alert.addTextField {alertTextField in
+            alertTextField.placeholder = "Add New Item"
+            textField = alertTextField
         }
         
         alert.addAction(action)
@@ -109,6 +124,17 @@ class ToDoListVC: UIViewController {
         ])
     }
     
+    func saveData(){
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(self.listItems)
+            try data.write(to: self.dataFilePath!)
+        } catch {
+            print("Error handling encoding \(error)")
+        }
+    }
+    
 }
 
 extension ToDoListVC : UICollectionViewDelegate {
@@ -122,8 +148,6 @@ extension ToDoListVC : UICollectionViewDelegate {
     }
     
 }
-
-
 
 extension ToDoListVC {
     

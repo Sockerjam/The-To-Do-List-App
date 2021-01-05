@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct ListViewModel:Hashable {
+struct ListViewModel:Hashable, Encodable {
     
-    let toDoList:String?
+    var toDoList:String?
+
 }
