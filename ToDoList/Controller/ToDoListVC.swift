@@ -38,6 +38,11 @@ class ToDoListVC: UIViewController {
         navBarSetup()
         
         setupView()
+        
+        loadData()
+        
+        setupList()
+    
     }
     
     func setupList(){
@@ -95,9 +100,9 @@ class ToDoListVC: UIViewController {
             
             self.listItems.append(ListViewModel(toDoList: textField.text))
             
-            self.setupList()
-            
             self.saveData()
+            
+            self.snapShot(self.listItems)
             
         }
         
@@ -132,6 +137,18 @@ class ToDoListVC: UIViewController {
             try data.write(to: self.dataFilePath!)
         } catch {
             print("Error handling encoding \(error)")
+        }
+    }
+    
+    func loadData(){
+        
+        if let data = try? Data(contentsOf: dataFilePath!) {
+        let decoder = PropertyListDecoder()
+            do {
+         listItems = try decoder.decode([ListViewModel].self, from: data)
+            } catch {
+                print("Error Decoding \(error)")
+            }
         }
     }
     
