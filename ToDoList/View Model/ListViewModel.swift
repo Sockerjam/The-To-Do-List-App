@@ -9,6 +9,6 @@ import Foundation
 
 struct ListViewModel:Hashable, Codable {
     
-    var toDoList:String?
+    var item:String?
 
 }

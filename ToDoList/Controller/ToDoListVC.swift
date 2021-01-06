@@ -51,7 +51,7 @@ class ToDoListVC: UIViewController {
         { cell, indexPath, listViewModel in
             
             var cellConfig = cell.defaultContentConfiguration()
-            cellConfig.text = listViewModel.toDoList
+            cellConfig.text = listViewModel.item
             cellConfig.textProperties.color = .black
             cellConfig.textProperties.font = UIFont(name: "Helvetica", size: 15)!
             cell.contentConfiguration = cellConfig
@@ -98,7 +98,7 @@ class ToDoListVC: UIViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default) { alertAction in
             
-            self.listItems.append(ListViewModel(toDoList: textField.text))
+            self.listItems.append(ListViewModel(item: textField.text))
             
             self.saveData()
             
@@ -163,6 +163,8 @@ extension ToDoListVC : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
         collectionView.cellForItem(at: indexPath)?.backgroundConfiguration?.backgroundColor = .white
     }
+    
+    
     
 }
 
