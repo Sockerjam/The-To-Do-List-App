@@ -6,14 +6,13 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListVC: UIViewController {
     
     var listItems:[ListViewModel] = []
     
-    var userDefaults = UserDefaults()
-    
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("item.plist")
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var dataSource:UICollectionViewDiffableDataSource<Section, ListViewModel>!
     
@@ -33,13 +32,15 @@ class ToDoListVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
         collectionView.delegate = self
         
         navBarSetup()
         
         setupView()
         
-        loadData()
+//        loadData()
         
         setupList()
     
@@ -98,7 +99,10 @@ class ToDoListVC: UIViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default) { alertAction in
             
-            self.listItems.append(ListViewModel(item: textField.text))
+            let newListItem = ListViewModel(context: self.context)
+            newListItem.item = textField.text
+            
+            self.listItems.append(newListItem)
             
             self.saveData()
             
@@ -130,27 +134,25 @@ class ToDoListVC: UIViewController {
     }
     
     func saveData(){
-        let encoder = PropertyListEncoder()
         
         do {
-            let data = try encoder.encode(self.listItems)
-            try data.write(to: self.dataFilePath!)
+            try context.save()
         } catch {
-            print("Error handling encoding \(error)")
+            print("Error saving \(error)")
         }
     }
     
-    func loadData(){
-        
-        if let data = try? Data(contentsOf: dataFilePath!) {
-        let decoder = PropertyListDecoder()
-            do {
-         listItems = try decoder.decode([ListViewModel].self, from: data)
-            } catch {
-                print("Error Decoding \(error)")
-            }
-        }
-    }
+//    func loadData(){
+//
+//        if let data = try? Data(contentsOf: dataFilePath!) {
+//        let decoder = PropertyListDecoder()
+//            do {
+//         listItems = try decoder.decode([ListViewModel].self, from: data)
+//            } catch {
+//                print("Error Decoding \(error)")
+//            }
+//        }
+//    }
     
 }
 
