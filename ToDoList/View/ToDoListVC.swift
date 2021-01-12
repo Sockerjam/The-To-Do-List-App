@@ -12,6 +12,8 @@ class ToDoListVC: UIViewController {
     
     let viewModel = ToDoListModel()
     
+    let searchController = UISearchController(searchResultsController: nil)
+    
     var collectionView:UICollectionView = {
         
         var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -34,6 +36,8 @@ class ToDoListVC: UIViewController {
         
         setupView()
         
+//        searchBarSetup()
+        
         loadData()
         
         setupList()
@@ -51,17 +55,29 @@ class ToDoListVC: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navBarApperance
         navigationController?.navigationBar.prefersLargeTitles = true
         
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search To-Do's"
+        searchController.searchBar.tintColor = .white
+        searchController.searchBar.barStyle = UIBarStyle.black
+        
+        navigationItem.searchController = searchController
+        
+        definesPresentationContext = true
+        
         let buttonImage = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addButton(_:)))
         buttonImage.tintColor = .white
         navigationItem.rightBarButtonItem = buttonImage
+        
     }
     
     func setupView(){
         
         view.addSubview(collectionView)
-        
+    
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
+        ///Layout Constraints for CollectionView
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor), collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor), collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
@@ -94,6 +110,11 @@ class ToDoListVC: UIViewController {
         snapShot.appendSections([.main])
         snapShot.appendItems(listModel)
         viewModel.dataSource.apply(snapShot)
+    }
+    
+    @objc func searchButtonPressed(_ sender:UIButton){
+        
+        searchController.isActive = true
     }
     
     @objc func addButton(_ sender:UIButton){
@@ -176,6 +197,26 @@ extension ToDoListVC : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     }
     
+}
+
+//MARK: - SearchResultsUpdating
+extension ToDoListVC : UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        
+    }
+    
+}
+
+//MARK: - SearchBarDelegate Methods
+extension ToDoListVC : UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print("Seachbar Clicked")
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        
+    }
 }
 
 //MARK: - Section Enum
