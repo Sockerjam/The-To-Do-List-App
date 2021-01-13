@@ -32,6 +32,8 @@ class ToDoListVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        UIPanGestureRecognizer.addTarget(.init(target: self, action: #selector(_:)))
+        
         collectionView.delegate = self
         searchController.searchBar.delegate = self
         
@@ -109,7 +111,7 @@ class ToDoListVC: UIViewController {
     func snapShot(_ listModel:[ListModel]){
         
         var snapShot = NSDiffableDataSourceSnapshot<Section, ListModel>()
-        snapShot.appendSections([])
+        snapShot.appendSections(Section.allCases)
         snapShot.appendItems(listModel)
         viewModel.dataSource.apply(snapShot)
     }
@@ -247,6 +249,7 @@ extension ToDoListVC : UISearchBarDelegate {
     }
     
 }
+
     
 }
 
