@@ -11,7 +11,7 @@ import CoreData
 class ToDoListVC: UIViewController {
     
     let viewModel = ToDoListModel()
-    
+
     let searchController = UISearchController(searchResultsController: nil)
     
     var collectionView:UICollectionView = {
@@ -26,6 +26,8 @@ class ToDoListVC: UIViewController {
         
         return collectionView
     }()
+    
+    let toDoListView = ToDoListView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,7 +109,7 @@ class ToDoListVC: UIViewController {
     func snapShot(_ listModel:[ListModel]){
         
         var snapShot = NSDiffableDataSourceSnapshot<Section, ListModel>()
-        snapShot.appendSections([.main])
+        snapShot.appendSections([])
         snapShot.appendItems(listModel)
         viewModel.dataSource.apply(snapShot)
     }
@@ -250,7 +252,7 @@ extension ToDoListVC : UISearchBarDelegate {
 
 //MARK: - Section Enum
 extension ToDoListVC {
-    enum Section {
-        case main
+    enum Section:CaseIterable {
+        case main, second
     }
 }
