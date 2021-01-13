@@ -31,6 +31,7 @@ class ToDoListVC: UIViewController {
         super.viewDidLoad()
         
         collectionView.delegate = self
+        searchController.searchBar.delegate = self
         
         navBarSetup()
         
@@ -38,9 +39,9 @@ class ToDoListVC: UIViewController {
         
 //        searchBarSetup()
         
-        loadData()
-        
         setupList()
+        
+        loadData()
 
     }
     
@@ -101,7 +102,6 @@ class ToDoListVC: UIViewController {
             return cell
         }
         
-        snapShot(viewModel.listItems)
     }
     
     func snapShot(_ listModel:[ListModel]){
@@ -169,13 +169,13 @@ class ToDoListVC: UIViewController {
     }
     
     ///Loads Data from Persistent Container
-    func loadData(){
-        let request:NSFetchRequest<ListModel> = ListModel.fetchRequest()
+    func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
         do{
             viewModel.listItems = try viewModel.context.fetch(request)
         } catch {
             print("Error requesting data \(error)")
         }
+        snapShot(viewModel.listItems)
     }
 
 }
@@ -210,13 +210,42 @@ extension ToDoListVC : UISearchResultsUpdating {
 //MARK: - SearchBarDelegate Methods
 extension ToDoListVC : UISearchBarDelegate {
     
+    ///When user taps Search on keyboard
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("Seachbar Clicked")
+        
+        let request:NSFetchRequest<ListModel> = ListModel.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "item CONTAINS[cd] %@", searchBar.text!)
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "item", ascending: true)]
+        
+       loadData(with: request)
     }
     
+    ///When user taps Cancel
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
+        loadData()
     }
+    
+    ///Continious update of list as user types in search bar
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchBar.text?.count == 0 {
+            loadData()
+            
+        } else {
+        
+        let request:NSFetchRequest<ListModel> = ListModel.fetchRequest()
+
+        request.predicate = NSPredicate(format: "item CONTAINS[cd] %@", searchBar.text!)
+
+        request.sortDescriptors = [NSSortDescriptor(key: "item", ascending: true)]
+
+        loadData(with: request)
+    }
+    
+}
+    
 }
 
 //MARK: - Section Enum

@@ -16,3 +16,14 @@ class ToDoListModel {
     var dataSource:UICollectionViewDiffableDataSource<ToDoListVC.Section, ListModel>!
     
 }
+
+class weekdaySections {
+    
+    var weekday:String?
+    var listItem:[ToDoListModel]
+    
+    init(weekday:String, listItem:[ToDoListModel]){
+        self.weekday = weekday
+        self.listItem = listItem
+    }
+}
