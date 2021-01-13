@@ -7,23 +7,15 @@
 
 import UIKit
 
-class ToDoListModel {
+struct ToDoListModel : Hashable {
     
     var listItems:[ListModel] = []
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    var dataSource:UICollectionViewDiffableDataSource<ToDoListVC.Section, ListModel>!
-    
 }
 
-class weekdaySections {
+struct WeekdaySections : Hashable {
     
-    var weekday:String?
-    var listItem:[ToDoListModel]
+    var weekday:String
+    var listItem:[ListItems]
     
-    init(weekday:String, listItem:[ToDoListModel]){
-        self.weekday = weekday
-        self.listItem = listItem
-    }
 }

@@ -10,9 +10,19 @@ import CoreData
 
 class ToDoListVC: UIViewController {
     
-    let viewModel = ToDoListModel()
+//    let weekdaySection = WeekdaySections()
+    
+//    var viewModel = ToDoListModel()
+    
+    var listItems:[ListItems] = []
+    
+    var weekdays:[WeekdaySections] = []
     
     let searchController = UISearchController(searchResultsController: nil)
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    var dataSource:UICollectionViewDiffableDataSource<WeekdaySections, ListItems>!
     
     var collectionView:UICollectionView = {
         
@@ -30,6 +40,11 @@ class ToDoListVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        weekdays = [
+            WeekdaySections(weekday: "Monday", listItem: listItems
+            ), WeekdaySections(weekday: "Tuesday", listItem: [ListItems(items: "Call Mamma"), ListItems(items: "Eat Food")]
+            )]
+        
         collectionView.delegate = self
         searchController.searchBar.delegate = self
         
@@ -37,11 +52,11 @@ class ToDoListVC: UIViewController {
         
         setupView()
         
-//        searchBarSetup()
-        
         setupList()
         
-        loadData()
+//        loadData()
+        
+        snapShot(weekdays)
 
     }
     
@@ -86,30 +101,32 @@ class ToDoListVC: UIViewController {
     
     func setupList(){
         
-        let registration = UICollectionView.CellRegistration<UICollectionViewListCell, ListModel>
+        let registration = UICollectionView.CellRegistration<UICollectionViewListCell, ListItems>
         { cell, indexPath, listModel in
             
             var cellConfig = cell.defaultContentConfiguration()
-            cellConfig.text = listModel.item
+            cellConfig.text = listModel.items
             cellConfig.textProperties.color = .black
             cellConfig.textProperties.font = UIFont(name: "Helvetica", size: 15)!
             cell.contentConfiguration = cellConfig
             
         }
         
-        viewModel.dataSource = UICollectionViewDiffableDataSource<Section, ListModel>(collectionView: collectionView) {collectionView, indexPath, listModel in
+        dataSource = UICollectionViewDiffableDataSource<WeekdaySections, ListItems>(collectionView: collectionView) {collectionView, indexPath, listModel in
             let cell = collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: listModel)
             return cell
         }
         
     }
     
-    func snapShot(_ listModel:[ListModel]){
+    func snapShot(_ listModel:[WeekdaySections]){
         
-        var snapShot = NSDiffableDataSourceSnapshot<Section, ListModel>()
-        snapShot.appendSections([.main])
-        snapShot.appendItems(listModel)
-        viewModel.dataSource.apply(snapShot)
+        var snapShot = NSDiffableDataSourceSnapshot<WeekdaySections, ListItems>()
+        snapShot.appendSections(listModel)
+        for items in listModel {
+            snapShot.appendItems(items.listItem, toSection: items)
+        }
+       dataSource.apply(snapShot)
     }
     
     @objc func searchButtonPressed(_ sender:UIButton){
@@ -132,15 +149,19 @@ class ToDoListVC: UIViewController {
            
             } else {
                 
+                self.listItems.append(ListItems(items: textField.text!))
                 ///Create new NSManagedObject for DataModel
-                let newListItem = ListModel(context: self.viewModel.context)
-                newListItem.item = textField.text
+//                let newListItem = ListModel(context: self.context)
+//                newListItem.item = textField.text
                 
                 ///Appends array with new object
-                self.viewModel.listItems.append(newListItem)
+//                self.viewModel.listItems.append(newListItem)
+//                self.listItems.append(newListItem)
                 
                 ///Saves new Data through the Context
-                self.saveData()
+//                self.saveData()
+                
+                self.snapShot(self.weekdays)
             }
         }
         
@@ -160,22 +181,22 @@ class ToDoListVC: UIViewController {
     func saveData(){
         
         do {
-            try viewModel.context.save()
+            try context.save()
         } catch {
             print("Error saving \(error)")
         }
         ///Updates ListView
-        snapShot(viewModel.listItems)
+//        snapShot()
     }
     
     ///Loads Data from Persistent Container
     func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
         do{
-            viewModel.listItems = try viewModel.context.fetch(request)
+            let item = try context.fetch(request)
         } catch {
             print("Error requesting data \(error)")
         }
-        snapShot(viewModel.listItems)
+//        snapShot(viewModel.listItems)
     }
 
 }
