@@ -80,6 +80,7 @@
 				92982C4125A31A1000C9DDAD /* SceneDelegate.swift */,
 				920CDD5625A5D9CC00A97DFF /* Model */,
 				92982C5725A32AE700C9DDAD /* ViewModel */,
+				926726D825AF580D0014A423 /* Controller */,
 				92B4ED7625AC8025004BB257 /* View */,
 				92982C4825A31A1200C9DDAD /* Assets.xcassets */,
 				92982C4A25A31A1200C9DDAD /* LaunchScreen.storyboard */,
@@ -100,7 +101,6 @@
 			isa = PBXGroup;
 			children = (
 				926726D525AF57FB0014A423 /* ToDoListView.swift */,
-				926726D825AF580D0014A423 /* Controller */,
 			);
 			path = View;
 			sourceTree = "<group>";

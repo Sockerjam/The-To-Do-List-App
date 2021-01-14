@@ -10,9 +10,15 @@ import CoreData
 
 class ToDoListVC: UIViewController {
     
+    let toDoListView = ToDoListView()
+    
     let viewModel = ToDoListModel()
-
+    
     let searchController = UISearchController(searchResultsController: nil)
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    var dataSource:UICollectionViewDiffableDataSource<Section, ListModel>!
     
     var collectionView:UICollectionView = {
         
@@ -26,22 +32,17 @@ class ToDoListVC: UIViewController {
         
         return collectionView
     }()
-    
-    let toDoListView = ToDoListView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        UIPanGestureRecognizer.addTarget(.init(target: self, action: #selector(_:)))
-        
-        collectionView.delegate = self
+        searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
+        collectionView.delegate = self
         
         navBarSetup()
         
         setupView()
-        
-//        searchBarSetup()
         
         setupList()
         
@@ -50,6 +51,7 @@ class ToDoListVC: UIViewController {
     }
     
     func navBarSetup(){
+    
         
         let navBarApperance = UINavigationBarAppearance()
         navBarApperance.backgroundColor = UIColor(red: 1.00, green: 0.70, blue: 0.42, alpha: 1.00)
@@ -60,7 +62,7 @@ class ToDoListVC: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navBarApperance
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        searchController.searchResultsUpdater = self
+        
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search To-Do's"
         searchController.searchBar.tintColor = .white
@@ -88,6 +90,7 @@ class ToDoListVC: UIViewController {
         ])
     }
     
+    
     func setupList(){
         
         let registration = UICollectionView.CellRegistration<UICollectionViewListCell, ListModel>
@@ -101,7 +104,7 @@ class ToDoListVC: UIViewController {
             
         }
         
-        viewModel.dataSource = UICollectionViewDiffableDataSource<Section, ListModel>(collectionView: collectionView) {collectionView, indexPath, listModel in
+        dataSource = UICollectionViewDiffableDataSource<Section, ListModel>(collectionView: collectionView) {collectionView, indexPath, listModel in
             let cell = collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: listModel)
             return cell
         }
@@ -113,12 +116,7 @@ class ToDoListVC: UIViewController {
         var snapShot = NSDiffableDataSourceSnapshot<Section, ListModel>()
         snapShot.appendSections(Section.allCases)
         snapShot.appendItems(listModel)
-        viewModel.dataSource.apply(snapShot)
-    }
-    
-    @objc func searchButtonPressed(_ sender:UIButton){
-        
-        searchController.isActive = true
+        dataSource.apply(snapShot)
     }
     
     @objc func addButton(_ sender:UIButton){
@@ -133,11 +131,10 @@ class ToDoListVC: UIViewController {
             if textField.text?.isEmpty == true{
                 
                 self.dismiss(animated: true)
-           
             } else {
                 
                 ///Create new NSManagedObject for DataModel
-                let newListItem = ListModel(context: self.viewModel.context)
+                let newListItem = ListModel(context: self.context)
                 newListItem.item = textField.text
                 
                 ///Appends array with new object
@@ -164,7 +161,7 @@ class ToDoListVC: UIViewController {
     func saveData(){
         
         do {
-            try viewModel.context.save()
+            try context.save()
         } catch {
             print("Error saving \(error)")
         }
@@ -175,7 +172,7 @@ class ToDoListVC: UIViewController {
     ///Loads Data from Persistent Container
     func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
         do{
-            viewModel.listItems = try viewModel.context.fetch(request)
+            viewModel.listItems = try context.fetch(request)
         } catch {
             print("Error requesting data \(error)")
         }
@@ -249,7 +246,6 @@ extension ToDoListVC : UISearchBarDelegate {
     }
     
 }
-
     
 }
 

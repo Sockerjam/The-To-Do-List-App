@@ -11,8 +11,4 @@ class ToDoListModel {
     
     var listItems:[ListModel] = []
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    var dataSource:UICollectionViewDiffableDataSource<ToDoListVC.Section, ListModel>!
-    
 }
