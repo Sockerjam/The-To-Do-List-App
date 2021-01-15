@@ -10,7 +10,7 @@ import CoreData
 
 class ToDoListVC: UIViewController {
     
-    let toDoListView = ToDoListView()
+//    let toDoListView = ToDoListView()
     
     let viewModel = ToDoListModel()
     
@@ -20,27 +20,17 @@ class ToDoListVC: UIViewController {
     
     var dataSource:UICollectionViewDiffableDataSource<Section, ListModel>!
     
-    var collectionView:UICollectionView = {
-        
-        var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-        configuration.backgroundColor = UIColor(red: 0.99, green: 0.97, blue: 0.91, alpha: 1.00)
-        
-        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = UIColor(red: 0.99, green: 0.97, blue: 0.91, alpha: 1.00)
-        
-        return collectionView
-    }()
+    var collectionView:UICollectionView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
-        collectionView.delegate = self
         
         navBarSetup()
+        
+        collectionViewSetup()
         
         setupView()
         
@@ -78,6 +68,44 @@ class ToDoListVC: UIViewController {
         
     }
     
+    func collectionViewSetup(){
+        
+        collectionView = {
+            
+            var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+            configuration.backgroundColor = UIColor(red: 0.99, green: 0.97, blue: 0.91, alpha: 1.00)
+            configuration.trailingSwipeActionsConfigurationProvider = {(indexPath) in
+                
+                let action1 = UIContextualAction(style: .normal, title: "Done") { action, view, completion in
+            
+                    self.viewModel.listItems[indexPath.row].done = true
+                    
+                    DispatchQueue.main.async {
+                        self.snapShot(self.viewModel.listItems)
+                    }
+                    
+                    self.saveData()
+                    
+                    completion(true)
+                }
+                
+                action1.backgroundColor = .systemGreen
+                
+                return UISwipeActionsConfiguration(actions: [action1])
+            }
+                
+            let layout = UICollectionViewCompositionalLayout.list(using: configuration)
+            
+                let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+            collectionView.backgroundColor = UIColor(red: 0.99, green: 0.97, blue: 0.91, alpha: 1.00)
+            
+            return collectionView
+        }()
+        
+        collectionView.delegate = self
+        
+    }
+    
     func setupView(){
         
         view.addSubview(collectionView)
@@ -101,11 +129,15 @@ class ToDoListVC: UIViewController {
             cellConfig.textProperties.color = .black
             cellConfig.textProperties.font = UIFont(name: "Helvetica", size: 15)!
             cell.contentConfiguration = cellConfig
+
             
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, ListModel>(collectionView: collectionView) {collectionView, indexPath, listModel in
             let cell = collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: listModel)
+            if self.viewModel.listItems[indexPath.row].done {
+                cell.accessories = [.checkmark()]
+            }
             return cell
         }
         
@@ -114,7 +146,7 @@ class ToDoListVC: UIViewController {
     func snapShot(_ listModel:[ListModel]){
         
         var snapShot = NSDiffableDataSourceSnapshot<Section, ListModel>()
-        snapShot.appendSections(Section.allCases)
+        snapShot.appendSections([.main])
         snapShot.appendItems(listModel)
         dataSource.apply(snapShot)
     }
@@ -178,6 +210,8 @@ class ToDoListVC: UIViewController {
         }
         snapShot(viewModel.listItems)
     }
+    
+
 
 }
 
@@ -196,6 +230,10 @@ extension ToDoListVC : UICollectionViewDelegate {
     
     ///Selected Cell interaction
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
     }
     
 }
@@ -252,6 +290,6 @@ extension ToDoListVC : UISearchBarDelegate {
 //MARK: - Section Enum
 extension ToDoListVC {
     enum Section:CaseIterable {
-        case main, second
+        case main
     }
 }
