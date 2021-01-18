@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListModel {
     
-    var dataSource:UICollectionViewDiffableDataSource<Section, ListModel>!
+    var dataSource:UICollectionViewDiffableDataSource<ToDoListVC.Section, ListModel>!
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -17,7 +18,7 @@ class ToDoListModel {
     
     func snapShot(_ listModel:[ListModel]){
         
-        var snapShot = NSDiffableDataSourceSnapshot<Section, ListModel>()
+        var snapShot = NSDiffableDataSourceSnapshot<ToDoListVC.Section, ListModel>()
         snapShot.appendSections([.main])
         snapShot.appendItems(listModel)
         dataSource.apply(snapShot)
@@ -35,11 +36,14 @@ class ToDoListModel {
         snapShot(listItems)
     }
     
-}
-
-//MARK: - Section Enum
-extension ToDoListModel {
-    enum Section:CaseIterable {
-        case main
+    ///Loads Data from Persistent Container
+    func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
+        do{
+            listItems = try context.fetch(request)
+        } catch {
+            print("Error requesting data \(error)")
+        }
+        snapShot(listItems)
     }
+    
 }

@@ -10,7 +10,7 @@ import UIKit
 class CollectionViewCell: UICollectionViewCell {
     
     let label = UILabel()
-    let checkMark = UIView()
+    var checkMark = UIImageView()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -34,9 +34,9 @@ class CollectionViewCell: UICollectionViewCell {
     
     func checkMarkDesign(){
         
-        checkMark.largeContentImage = UIImage(systemName: "checkmark")
+        checkMark.image = UIImage(systemName: "checkmark")
+        checkMark.tintColor = .blue
                 
-        
     }
     
     func labelConstraints(){
@@ -55,7 +55,7 @@ class CollectionViewCell: UICollectionViewCell {
         
         checkMark.translatesAutoresizingMaskIntoConstraints = false
         
-        NSLayoutConstraint.activate([checkMark.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 15),checkMark.topAnchor.constraint(equalTo: topAnchor, constant: 15), checkMark.widthAnchor.constraint(equalToConstant: 20), checkMark.heightAnchor.constraint(equalToConstant: 20)])
+        NSLayoutConstraint.activate([checkMark.trailingAnchor.constraint(equalTo: trailingAnchor),checkMark.topAnchor.constraint(equalTo: topAnchor, constant: 15), checkMark.widthAnchor.constraint(equalToConstant: 20), checkMark.heightAnchor.constraint(equalToConstant: 20)])
         
     }
 

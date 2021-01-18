@@ -9,18 +9,20 @@ import UIKit
 
 class ToDoListView {
     
-    var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-    var swipeAction1 = UIContextualAction()
+    private var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+    private var swipeAction1 = UIContextualAction()
     var collectionView:UICollectionView!
+    
+    var swipedCell:Int?
     
     let searchController = UISearchController(searchResultsController: nil)
     
     var toDoListModel:ToDoListModel!
     var view:UIViewController!
     
+    ///NavigationBar Setup
     func navBarSetup(){
     
-        
         let navBarApperance = UINavigationBarAppearance()
         navBarApperance.backgroundColor = UIColor(red: 1.00, green: 0.70, blue: 0.42, alpha: 1.00)
         navBarApperance.largeTitleTextAttributes = [.foregroundColor:UIColor.white]
@@ -46,17 +48,23 @@ class ToDoListView {
         
     }
     
+    ///SwipeAction For Cells
     func setupSwipeAction(){
         
         swipeAction1 = UIContextualAction(style: .normal, title: "Done", handler: { action, view, completion in
+            if let swipedCell = self.swipedCell {
+            self.swipeAction(swipedCell)
+            }
             completion(true)
         })
     }
     
+    ///CollectionViewList Design
     func collectionViewSetup() {
         
         configuration.backgroundColor = UIColor(red: 0.99, green: 0.97, blue: 0.91, alpha: 1.00)
         configuration.trailingSwipeActionsConfigurationProvider = {(indexPath) in
+            self.swipedCell = indexPath.row
             self.swipeAction1.backgroundColor = .systemGreen
             return UISwipeActionsConfiguration(actions: [self.swipeAction1])
         }
@@ -69,6 +77,7 @@ class ToDoListView {
         
     }
     
+    ///CollectionViewListConstraints
     func collectionViewConstraints(_ view:UIView){
         
         view.addSubview(collectionView)
@@ -81,6 +90,7 @@ class ToDoListView {
         ])
     }
     
+    ///Button Action From NavigationController
     @objc func addButton(_ sender:UIButton){
         
         var textField = UITextField()
@@ -98,10 +108,10 @@ class ToDoListView {
                 ///Create new NSManagedObject for DataModel
                 let newListItem = ListModel(context: self.toDoListModel.context)
                 newListItem.item = textField.text
-                
+
                 ///Appends array with new object
                 self.toDoListModel.listItems.append(newListItem)
-                
+
                 ///Saves new Data through the Context
                 self.toDoListModel.saveData()
             }
@@ -119,11 +129,13 @@ class ToDoListView {
         }
     }
     
-    func swipeActionHandler(){
+    ///Adds checkMark when User selects Done
+    func swipeAction(_ indexPath:Int){
+        
+    let item = toDoListModel.listItems[indexPath].done = !toDoListModel.listItems[indexPath].done == true
+    
         
         
     }
-    
-    
     
 }
