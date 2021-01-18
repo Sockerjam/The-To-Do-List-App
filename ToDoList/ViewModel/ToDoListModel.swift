@@ -9,6 +9,37 @@ import UIKit
 
 class ToDoListModel {
     
+    var dataSource:UICollectionViewDiffableDataSource<Section, ListModel>!
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     var listItems:[ListModel] = []
     
+    func snapShot(_ listModel:[ListModel]){
+        
+        var snapShot = NSDiffableDataSourceSnapshot<Section, ListModel>()
+        snapShot.appendSections([.main])
+        snapShot.appendItems(listModel)
+        dataSource.apply(snapShot)
+    }
+    
+    ///Saves Data to Persistent Container
+    func saveData(){
+        
+        do {
+            try context.save()
+        } catch {
+            print("Error saving \(error)")
+        }
+        ///Updates ListView
+        snapShot(listItems)
+    }
+    
+}
+
+//MARK: - Section Enum
+extension ToDoListModel {
+    enum Section:CaseIterable {
+        case main
+    }
 }

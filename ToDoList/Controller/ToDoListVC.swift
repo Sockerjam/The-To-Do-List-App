@@ -10,196 +10,97 @@ import CoreData
 
 class ToDoListVC: UIViewController {
     
-//    let toDoListView = ToDoListView()
+    let toDoListView = ToDoListView()
     
     let viewModel = ToDoListModel()
     
-    let searchController = UISearchController(searchResultsController: nil)
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    var dataSource:UICollectionViewDiffableDataSource<Section, ListModel>!
-    
-    var collectionView:UICollectionView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
+        toDoListView.searchController.searchResultsUpdater = self
+        toDoListView.searchController.searchBar.delegate = self
         
-        navBarSetup()
+        toDoListView.navBarSetup()
         
-        collectionViewSetup()
-        
-        setupView()
-        
+        toDoListView.setupSwipeAction()
+        toDoListView.collectionViewSetup()
+        toDoListView.collectionViewConstraints(view)
+        toDoListView.collectionView.delegate = self
         setupList()
-        
         loadData()
 
     }
     
-    func navBarSetup(){
-    
-        
-        let navBarApperance = UINavigationBarAppearance()
-        navBarApperance.backgroundColor = UIColor(red: 1.00, green: 0.70, blue: 0.42, alpha: 1.00)
-        navBarApperance.largeTitleTextAttributes = [.foregroundColor:UIColor.white]
-        navBarApperance.titleTextAttributes = [.foregroundColor:UIColor.white]
-        
-        navigationController?.navigationBar.standardAppearance = navBarApperance
-        navigationController?.navigationBar.scrollEdgeAppearance = navBarApperance
-        navigationController?.navigationBar.prefersLargeTitles = true
-        
-        
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search To-Do's"
-        searchController.searchBar.tintColor = .white
-        searchController.searchBar.barStyle = UIBarStyle.black
-        
-        navigationItem.searchController = searchController
-        
-        definesPresentationContext = true
-        
-        let buttonImage = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addButton(_:)))
-        buttonImage.tintColor = .white
-        navigationItem.rightBarButtonItem = buttonImage
-        
-    }
-    
-    func collectionViewSetup(){
-        
-        collectionView = {
-            
-            var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-            configuration.backgroundColor = UIColor(red: 0.99, green: 0.97, blue: 0.91, alpha: 1.00)
-            configuration.trailingSwipeActionsConfigurationProvider = {(indexPath) in
-                
-                let action1 = UIContextualAction(style: .normal, title: "Done") { action, view, completion in
-            
-                    self.viewModel.listItems[indexPath.row].done = true
-                    
-                    DispatchQueue.main.async {
-                        self.snapShot(self.viewModel.listItems)
-                    }
-                    
-                    self.saveData()
-                    
-                    completion(true)
-                }
-                
-                action1.backgroundColor = .systemGreen
-                
-                return UISwipeActionsConfiguration(actions: [action1])
-            }
-                
-            let layout = UICollectionViewCompositionalLayout.list(using: configuration)
-            
-                let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-            collectionView.backgroundColor = UIColor(red: 0.99, green: 0.97, blue: 0.91, alpha: 1.00)
-            
-            return collectionView
-        }()
-        
-        collectionView.delegate = self
-        
-    }
-    
-    func setupView(){
-        
-        view.addSubview(collectionView)
-    
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        ///Layout Constraints for CollectionView
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor), collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor), collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-    }
-    
-    
     func setupList(){
         
-        let registration = UICollectionView.CellRegistration<UICollectionViewListCell, ListModel>
-        { cell, indexPath, listModel in
+        viewModel.dataSource = UICollectionViewDiffableDataSource<viewModel.Section, ListModel>(collectionView: toDoListView.collectionView) {collectionView, indexPath, listModel in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "reusableListCell", for: indexPath) as! CollectionViewCell
+            cell.label.text = listModel.item
             
-            var cellConfig = cell.defaultContentConfiguration()
-            cellConfig.text = listModel.item
-            cellConfig.textProperties.color = .black
-            cellConfig.textProperties.font = UIFont(name: "Helvetica", size: 15)!
-            cell.contentConfiguration = cellConfig
-
-            
-        }
-        
-        dataSource = UICollectionViewDiffableDataSource<Section, ListModel>(collectionView: collectionView) {collectionView, indexPath, listModel in
-            let cell = collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: listModel)
-            if self.viewModel.listItems[indexPath.row].done {
-                cell.accessories = [.checkmark()]
-            }
             return cell
         }
         
     }
     
-    func snapShot(_ listModel:[ListModel]){
-        
-        var snapShot = NSDiffableDataSourceSnapshot<Section, ListModel>()
-        snapShot.appendSections([.main])
-        snapShot.appendItems(listModel)
-        dataSource.apply(snapShot)
-    }
+//    func snapShot(_ listModel:[ListModel]){
+//        
+//        var snapShot = NSDiffableDataSourceSnapshot<Section, ListModel>()
+//        snapShot.appendSections([.main])
+//        snapShot.appendItems(listModel)
+//        dataSource.apply(snapShot)
+//    }
     
-    @objc func addButton(_ sender:UIButton){
-        
-        var textField = UITextField()
-        
-        let alert = UIAlertController(title: "Add New To-Do Item", message: "", preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "Add Item", style: .default) { alertAction in
-            
-            ///Check if text field is empy
-            if textField.text?.isEmpty == true{
-                
-                self.dismiss(animated: true)
-            } else {
-                
-                ///Create new NSManagedObject for DataModel
-                let newListItem = ListModel(context: self.context)
-                newListItem.item = textField.text
-                
-                ///Appends array with new object
-                self.viewModel.listItems.append(newListItem)
-                
-                ///Saves new Data through the Context
-                self.saveData()
-            }
-        }
-        
-        alert.addTextField {alertTextField in
-            alertTextField.placeholder = "Add New Item"
-            textField = alertTextField
-        }
-        
-        alert.addAction(action)
-        
-        present(alert, animated: true) {
-            
-        }
-    }
+//    @objc func addButton(_ sender:UIButton){
+//        
+//        var textField = UITextField()
+//        
+//        let alert = UIAlertController(title: "Add New To-Do Item", message: "", preferredStyle: .alert)
+//        
+//        let action = UIAlertAction(title: "Add Item", style: .default) { alertAction in
+//            
+//            ///Check if text field is empy
+//            if textField.text?.isEmpty == true{
+//                
+//                self.dismiss(animated: true)
+//            } else {
+//                
+//                ///Create new NSManagedObject for DataModel
+//                let newListItem = ListModel(context: self.context)
+//                newListItem.item = textField.text
+//                
+//                ///Appends array with new object
+//                self.viewModel.listItems.append(newListItem)
+//                
+//                ///Saves new Data through the Context
+//                self.saveData()
+//            }
+//        }
+//        
+//        alert.addTextField {alertTextField in
+//            alertTextField.placeholder = "Add New Item"
+//            textField = alertTextField
+//        }
+//        
+//        alert.addAction(action)
+//        
+//        present(alert, animated: true) {
+//            
+//        }
+//    }
     
-    ///Saves Data to Persistent Container
-    func saveData(){
-        
-        do {
-            try context.save()
-        } catch {
-            print("Error saving \(error)")
-        }
-        ///Updates ListView
-        snapShot(viewModel.listItems)
-    }
+//    ///Saves Data to Persistent Container
+//    func saveData(){
+//        
+//        do {
+//            try context.save()
+//        } catch {
+//            print("Error saving \(error)")
+//        }
+//        ///Updates ListView
+//        snapShot(viewModel.listItems)
+//    }
     
     ///Loads Data from Persistent Container
     func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
@@ -285,11 +186,4 @@ extension ToDoListVC : UISearchBarDelegate {
     
 }
     
-}
-
-//MARK: - Section Enum
-extension ToDoListVC {
-    enum Section:CaseIterable {
-        case main
-    }
 }
