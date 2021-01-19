@@ -64,8 +64,8 @@ class ToDoListView {
                 self.swipeActionDone(indexPath)
                 completion(true)
             }
-            deleteAction.backgroundColor = .red
-            doneAction.backgroundColor = .green
+            deleteAction.backgroundColor = UIColor(red: 1.00, green: 0.27, blue: 0.27, alpha: 1.00)
+            doneAction.backgroundColor = UIColor(red: 0.51, green: 0.66, blue: 0.36, alpha: 1.00)
             return UISwipeActionsConfiguration(actions: [deleteAction, doneAction])
             
         }
