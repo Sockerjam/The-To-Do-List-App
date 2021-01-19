@@ -10,7 +10,7 @@ import CoreData
 
 class ToDoListModel {
     
-    var dataSource:UICollectionViewDiffableDataSource<ToDoListVC.Section, ListModel>!
+    var dataSource:UICollectionViewDiffableDataSource<Section, ListModel>!
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -18,7 +18,7 @@ class ToDoListModel {
     
     func snapShot(_ listModel:[ListModel]){
         
-        var snapShot = NSDiffableDataSourceSnapshot<ToDoListVC.Section, ListModel>()
+        var snapShot = NSDiffableDataSourceSnapshot<Section, ListModel>()
         snapShot.appendSections([.main])
         snapShot.appendItems(listModel)
         dataSource.apply(snapShot)
@@ -46,4 +46,11 @@ class ToDoListModel {
         snapShot(listItems)
     }
     
+}
+
+//MARK: - Section Enum
+extension ToDoListModel {
+    enum Section {
+        case main
+    }
 }

@@ -15,6 +15,8 @@ class CollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        backgroundColor = .white
+        
         labelDesign()
         checkMarkDesign()
         
@@ -34,7 +36,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     func checkMarkDesign(){
         
-        checkMark.image = UIImage(systemName: "checkmark")
+        
         checkMark.tintColor = .blue
                 
     }

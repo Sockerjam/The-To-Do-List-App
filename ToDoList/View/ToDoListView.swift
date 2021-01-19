@@ -6,14 +6,12 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListView {
     
     private var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-    private var swipeAction1 = UIContextualAction()
     var collectionView:UICollectionView!
-    
-    var swipedCell:Int?
     
     let searchController = UISearchController(searchResultsController: nil)
     
@@ -47,26 +45,29 @@ class ToDoListView {
         view.navigationItem.rightBarButtonItem = buttonImage
         
     }
-    
-    ///SwipeAction For Cells
-    func setupSwipeAction(){
-        
-        swipeAction1 = UIContextualAction(style: .normal, title: "Done", handler: { action, view, completion in
-            if let swipedCell = self.swipedCell {
-            self.swipeAction(swipedCell)
-            }
-            completion(true)
-        })
-    }
+
     
     ///CollectionViewList Design
     func collectionViewSetup() {
         
         configuration.backgroundColor = UIColor(red: 0.99, green: 0.97, blue: 0.91, alpha: 1.00)
         configuration.trailingSwipeActionsConfigurationProvider = {(indexPath) in
-            self.swipedCell = indexPath.row
-            self.swipeAction1.backgroundColor = .systemGreen
-            return UISwipeActionsConfiguration(actions: [self.swipeAction1])
+            
+            ///Delete Button Setup
+            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completion) in
+                self.swipeActionDelete(indexPath)
+                completion(true)
+            }
+            
+            ///Done Button Setup
+            let doneAction = UIContextualAction(style: .normal, title: "Done") { (action, view, completion) in
+                self.swipeActionDone(indexPath)
+                completion(true)
+            }
+            deleteAction.backgroundColor = .red
+            doneAction.backgroundColor = .green
+            return UISwipeActionsConfiguration(actions: [deleteAction, doneAction])
+            
         }
         
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
@@ -129,12 +130,34 @@ class ToDoListView {
         }
     }
     
-    ///Adds checkMark when User selects Done
-    func swipeAction(_ indexPath:Int){
+    ///Deletes cell when user clicks Delete
+    func swipeActionDelete(_ indexPath:IndexPath){
+
+        ///Deletes selected item from the context
+        toDoListModel.context.delete(toDoListModel.listItems[indexPath.item])
         
-    let item = toDoListModel.listItems[indexPath].done = !toDoListModel.listItems[indexPath].done == true
+        ///Deletes selected item from listItem Array
+        toDoListModel.listItems.remove(at: indexPath.item)
+        
+        ///Saves data to the persistent container
+        toDoListModel.saveData()
+
+    }
     
+    ///Adds checkmark to completed items
+    func swipeActionDone(_ indexPath:IndexPath){
         
+        toDoListModel.listItems[indexPath.item].done = !toDoListModel.listItems[indexPath.item].done
+        
+        let cell = collectionView.cellForItem(at: indexPath) as! CollectionViewCell
+        
+        if toDoListModel.listItems[indexPath.item].done {
+            cell.checkMark.image = UIImage(systemName: "checkmark")
+        } else {
+            cell.checkMark.image = .none
+        }
+        
+        toDoListModel.saveData()
         
     }
     

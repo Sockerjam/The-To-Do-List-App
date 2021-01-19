@@ -24,21 +24,26 @@ class ToDoListVC: UIViewController {
         
         toDoListView.navBarSetup()
         
-        toDoListView.setupSwipeAction()
         toDoListView.collectionViewSetup()
         toDoListView.collectionViewConstraints(view)
         toDoListView.collectionView.delegate = self
+        
         setupList()
+        
         viewModel.loadData()
 
     }
     
     func setupList(){
         
-        viewModel.dataSource = UICollectionViewDiffableDataSource<Section, ListModel>(collectionView: toDoListView.collectionView) {collectionView, indexPath, listModel in
+        viewModel.dataSource = UICollectionViewDiffableDataSource<ToDoListModel.Section, ListModel>(collectionView: toDoListView.collectionView) {collectionView, indexPath, listModel in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "reusableListCell", for: indexPath) as! CollectionViewCell
             cell.label.text = listModel.item
-            
+            if self.viewModel.listItems[indexPath.item].done {
+                cell.checkMark.image = UIImage(systemName: "checkmark")
+            } else {
+                cell.checkMark.image = .none
+            }
             return cell
         }
         
@@ -52,12 +57,14 @@ extension ToDoListVC : UICollectionViewDelegate {
     
     ///Highlighted cell background
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-        collectionView.cellForItem(at: indexPath)?.backgroundConfiguration?.backgroundColor = .systemTeal
+        let cell = collectionView.cellForItem(at: indexPath) as! CollectionViewCell
+        cell.backgroundColor = .systemTeal
     }
     
     ///Unhighlighted cell background
     func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
-        collectionView.cellForItem(at: indexPath)?.backgroundConfiguration?.backgroundColor = .white
+        let cell = collectionView.cellForItem(at: indexPath) as! CollectionViewCell
+        cell.backgroundColor = .white
     }
     
     ///Selected Cell interaction
@@ -114,11 +121,4 @@ extension ToDoListVC : UISearchBarDelegate {
     
 }
     
-}
-
-//MARK: - Section Enum
-extension ToDoListVC {
-    enum Section {
-        case main
-    }
 }
