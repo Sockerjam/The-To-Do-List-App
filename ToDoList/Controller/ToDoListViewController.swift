@@ -177,7 +177,6 @@ extension ToDoListViewController: UICollectionViewDelegate {
 //MARK: - SearchResultsUpdating
 extension ToDoListViewController : UISearchResultsUpdating {
   
-  // Why this empty implementation? We can skip the whole implemenration of UISearchBarDelegate by implementing this. Quick how to: https://www.hackingwithswift.com/example-code/uikit/how-to-use-uisearchcontroller-to-let-users-enter-search-words)
   func updateSearchResults(for searchController: UISearchController) {
     toDoListModel.update(fromSearchKey: searchController.searchBar.text)
   }
