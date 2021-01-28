@@ -64,7 +64,6 @@ final class ToDoListViewController: UIViewController {
     searchController.searchBar.placeholder = "Search To-Do's"
     searchController.searchBar.tintColor = .white
     searchController.searchBar.barStyle = UIBarStyle.black
-    searchController.searchBar.delegate = self
     searchController.searchResultsUpdater = self
     return searchController
   }()
@@ -179,26 +178,7 @@ extension ToDoListViewController : UISearchResultsUpdating {
   
   // Why this empty implementation? We can skip the whole implemenration of UISearchBarDelegate by implementing this. Quick how to: https://www.hackingwithswift.com/example-code/uikit/how-to-use-uisearchcontroller-to-let-users-enter-search-words)
   func updateSearchResults(for searchController: UISearchController) {
+    toDoListModel.update(fromSearchKey: searchController.searchBar.text)
   }
-  
-}
-
-//MARK: - SearchBarDelegate Methods
-// As per above, I think you can delete this and move the relevant code in the protocol implementation above
-extension ToDoListViewController : UISearchBarDelegate {
-  
-  ///When user taps Search on keyboard
-  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    toDoListModel.update(fromSearchKey: searchBar.text)
-  }
-  
-  ///When user taps Cancel
-  func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-    toDoListModel.update()
-  }
-  
-  ///Continious update of list as user types in search bar
-  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    toDoListModel.update(fromSearchKey: searchBar.text)
-  }
+    
 }
