@@ -22,6 +22,6 @@ extension ToDoListModel {
 extension ToDoListModel {
     
     var days:[String] {
-       ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+       ["Mon", "Tue", "Wed", "Thu", "Fri"]
     }
 }

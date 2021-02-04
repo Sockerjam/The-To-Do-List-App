@@ -12,7 +12,6 @@
 		920CDD5925A5D9E400A97DFF /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 920CDD5725A5D9E400A97DFF /* DataModel.xcdatamodeld */; };
 		92588B2425CAD74C00AA6239 /* AddItemVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92588B2225CAD74C00AA6239 /* AddItemVC.swift */; };
 		92588B2525CAD74C00AA6239 /* AddItemVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92588B2325CAD74C00AA6239 /* AddItemVC.xib */; };
-		92588B2C25CAFA2800AA6239 /* CustomPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92588B2B25CAFA2800AA6239 /* CustomPickerView.swift */; };
 		926726D625AF57FB0014A423 /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926726D525AF57FB0014A423 /* ToDoListViewController.swift */; };
 		926748F325B58B7400AE1624 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926748F125B58B7400AE1624 /* CollectionViewCell.swift */; };
 		926748F425B58B7400AE1624 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 926748F225B58B7400AE1624 /* CollectionViewCell.xib */; };
@@ -29,7 +28,6 @@
 		920CDD5825A5D9E400A97DFF /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		92588B2225CAD74C00AA6239 /* AddItemVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemVC.swift; sourceTree = "<group>"; };
 		92588B2325CAD74C00AA6239 /* AddItemVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddItemVC.xib; sourceTree = "<group>"; };
-		92588B2B25CAFA2800AA6239 /* CustomPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerView.swift; sourceTree = "<group>"; };
 		926726D525AF57FB0014A423 /* ToDoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
 		926748F125B58B7400AE1624 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		926748F225B58B7400AE1624 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
@@ -68,14 +66,6 @@
 				92588B2325CAD74C00AA6239 /* AddItemVC.xib */,
 			);
 			path = "Custom New Item View";
-			sourceTree = "<group>";
-		};
-		92588B2A25CAF9F000AA6239 /* Custom PickerView */ = {
-			isa = PBXGroup;
-			children = (
-				92588B2B25CAFA2800AA6239 /* CustomPickerView.swift */,
-			);
-			path = "Custom PickerView";
 			sourceTree = "<group>";
 		};
 		926726D825AF580D0014A423 /* Controller */ = {
@@ -121,7 +111,6 @@
 				926726D825AF580D0014A423 /* Controller */,
 				926748F625B5932400AE1624 /* Custom List Cell */,
 				92588B1D25CAD2E800AA6239 /* Custom New Item View */,
-				92588B2A25CAF9F000AA6239 /* Custom PickerView */,
 				92982C4825A31A1200C9DDAD /* Assets.xcassets */,
 				92982C4A25A31A1200C9DDAD /* LaunchScreen.storyboard */,
 				92982C4D25A31A1200C9DDAD /* Info.plist */,
@@ -212,7 +201,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				926726D625AF57FB0014A423 /* ToDoListViewController.swift in Sources */,
-				92588B2C25CAFA2800AA6239 /* CustomPickerView.swift in Sources */,
 				2AC0A88E25BDE84A002A3C15 /* ToDoListModel.swift in Sources */,
 				92B4ED8025AC84A2004BB257 /* ToDoListModelImpl.swift in Sources */,
 				920CDD5925A5D9E400A97DFF /* DataModel.xcdatamodeld in Sources */,

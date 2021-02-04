@@ -78,13 +78,13 @@ final class ToDoListViewController: UIViewController {
 }
   
   private let toDoListModel: ToDoListModel
-    private let customAddItemView: AddItemVC
+    private let addItemVC: AddItemVC
   
   // MARK: Lifecycle
   
   init(viewModel: ToDoListModel) {
     self.toDoListModel = viewModel
-    self.customAddItemView = AddItemVC()
+    self.addItemVC = AddItemVC(with: viewModel)
     super.init(nibName: nil, bundle: nil)
     setConstraints()
   }
@@ -147,9 +147,9 @@ final class ToDoListViewController: UIViewController {
       alert.addAction(action)
       return alert
     }()
-    customAddItemView.modalPresentationStyle = .overCurrentContext
-    customAddItemView.modalTransitionStyle = .crossDissolve
-    present(customAddItemView, animated: true) {
+    addItemVC.modalPresentationStyle = .overCurrentContext
+    addItemVC.modalTransitionStyle = .crossDissolve
+    present(addItemVC, animated: true) {
     }
   }
   

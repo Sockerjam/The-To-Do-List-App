@@ -1,5 +1,5 @@
 import Foundation
 
-enum ListModelSection: Hashable {
-  case main
+enum ListModelSection: Hashable, CaseIterable {
+  case Monday, Tuesday, Wednesday, Thursday, Friday
 }

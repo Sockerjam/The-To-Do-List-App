@@ -47,7 +47,7 @@ final class ToDoListModelImpl {
   
   private func snapShot(_ listModel: [ListModel]) {
     var snapShot = NSDiffableDataSourceSnapshot<ListModelSection, ListModel>()
-    snapShot.appendSections([.main])
+    snapShot.appendSections([.Monday])
     snapShot.appendItems(listModel)
     dataSource?.apply(snapShot, animatingDifferences: false)
     // Unfortunate bug in this Apple API forces us to not animate the differences: https://developer.apple.com/forums/thread/126742
@@ -56,7 +56,7 @@ final class ToDoListModelImpl {
 
 
 //MARK: - ToDoListModel
-extension ToDoListModelImpl: ToDoListModel {
+extension ToDoListModelImpl: ToDoListModel {    
   
   var itemModels: [ListModel] {
     listItems
