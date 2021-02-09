@@ -158,12 +158,13 @@ class AddItemVC: UIViewController {
         if weekdayList.selectedSegmentIndex >= 0 {
             
             let weekdayIndex = weekdayList.selectedSegmentIndex
+            
             guard let text = textField.text,
                   !text.isEmpty else {
               dismiss(animated: UIView.areAnimationsEnabled)
               return
             }
-            viewModel.addNewItem(text)
+            viewModel.addNewItem(text, viewModel.days[weekdayIndex])
             dismiss(animated: true)
         }
         

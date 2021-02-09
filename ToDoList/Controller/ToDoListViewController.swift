@@ -21,6 +21,7 @@ final class ToDoListViewController: UIViewController {
   
   private lazy var layout: UICollectionViewCompositionalLayout = {
     var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+    configuration.headerMode = .supplementary
     configuration.backgroundColor = UIColor(red: 0.99, green: 0.97, blue: 0.91, alpha: 1.00)
     configuration.trailingSwipeActionsConfigurationProvider = {(indexPath) in
       
@@ -46,6 +47,7 @@ final class ToDoListViewController: UIViewController {
   private lazy var collectionView: UICollectionView = {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "reusableListCell")
+    collectionView.register(UINib(nibName: "CustomHeaderView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView")
     collectionView.backgroundColor = Constants.collectionViewBackgroundColor
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     collectionView.delegate = self
@@ -68,7 +70,7 @@ final class ToDoListViewController: UIViewController {
     return searchController
   }()
   
-  private lazy var dataSource = UICollectionViewDiffableDataSource<ListModelSection, ListModel>(collectionView: collectionView) { collectionView, indexPath, listModel in
+  private lazy var dataSource = UICollectionViewDiffableDataSource<Sections, ListModel>(collectionView: collectionView) { collectionView, indexPath, listModel in
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "reusableListCell", for: indexPath) as? CollectionViewCell else {
       assertionFailure("Unable to dequeue colleciton view cell")
       return nil
@@ -76,6 +78,8 @@ final class ToDoListViewController: UIViewController {
     cell.configure(with: self.toDoListModel.itemModels[indexPath.item])
     return cell
 }
+    
+    
   
   private let toDoListModel: ToDoListModel
     private let addItemVC: AddItemVC
@@ -87,6 +91,7 @@ final class ToDoListViewController: UIViewController {
     self.addItemVC = AddItemVC(with: viewModel)
     super.init(nibName: nil, bundle: nil)
     setConstraints()
+    headerConfiguration()
   }
   
   required init?(coder: NSCoder) {
@@ -100,7 +105,17 @@ final class ToDoListViewController: UIViewController {
   }
   
   // MARK: Private functions
-  
+    
+    private func headerConfiguration(){
+        dataSource.supplementaryViewProvider = {collectionView, elementKind, indexPath in
+          let headerView =  collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView", for: indexPath) as? CustomHeaderView
+            
+            headerView?.configureHeader(with: self.toDoListModel.itemModels[indexPath.item])
+            
+            return headerView
+        }
+    }
+    
   private func navBarSetup(){
     let navBarApperance = UINavigationBarAppearance()
     navBarApperance.backgroundColor = Constants.barBackgroundColor
@@ -127,26 +142,26 @@ final class ToDoListViewController: UIViewController {
   @objc private func didTapAddButton(_ sender: UIButton){
     
     // Moved this function from the global scope - alertController was only initialised once causing placeholder text do dissapear
-    let alertController: UIAlertController = {
-      var textField = UITextField()
-      let alert = UIAlertController(title: "Add New To-Do Item", message: "", preferredStyle: .alert)
-      alert.addTextField { alertTextField in
-        alertTextField.placeholder = "Add New Item"
-          textField = alertTextField
-      }
-      
-      let action = UIAlertAction(title: "Add Item", style: .default) { [weak self] alertAction in
-        guard let text = textField.text,
-              !text.isEmpty else {
-          self?.dismiss(animated: UIView.areAnimationsEnabled)
-          return
-        }
-        self?.toDoListModel.addNewItem(text)
-      }
-      
-      alert.addAction(action)
-      return alert
-    }()
+//    let alertController: UIAlertController = {
+//      var textField = UITextField()
+//      let alert = UIAlertController(title: "Add New To-Do Item", message: "", preferredStyle: .alert)
+//      alert.addTextField { alertTextField in
+//        alertTextField.placeholder = "Add New Item"
+//          textField = alertTextField
+//      }
+//
+//      let action = UIAlertAction(title: "Add Item", style: .default) { [weak self] alertAction in
+//        guard let text = textField.text,
+//              !text.isEmpty else {
+//          self?.dismiss(animated: UIView.areAnimationsEnabled)
+//          return
+//        }
+//        self?.toDoListModel.addNewItem(text)
+//      }
+//
+//      alert.addAction(action)
+//      return alert
+//    }()
     addItemVC.modalPresentationStyle = .overCurrentContext
     addItemVC.modalTransitionStyle = .crossDissolve
     present(addItemVC, animated: true) {
@@ -176,6 +191,7 @@ extension ToDoListViewController: UICollectionViewDelegate {
     let cell = collectionView.cellForItem(at: indexPath) as! CollectionViewCell
     cell.backgroundColor = .white
   }
+
 }
 
 //MARK: - SearchResultsUpdating
