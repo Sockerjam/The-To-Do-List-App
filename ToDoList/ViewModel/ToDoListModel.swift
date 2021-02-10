@@ -3,7 +3,7 @@ import UIKit
 
 protocol ToDoListModel {
     var itemModels: [ListModel] { get }
-    func start(with dataSource: UICollectionViewDiffableDataSource<Sections, ListModel>)
+    func start(with dataSource: UICollectionViewDiffableDataSource<ListModelSection, ListModel>)
     func update(fromSearchKey searchKey: String?)
     func addNewItem(_ item: String, _ weekday: String)
     func deleteItem(at indexPath: IndexPath)

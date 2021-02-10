@@ -71,12 +71,13 @@ final class ToDoListViewController: UIViewController {
     return searchController
   }()
   
-  private lazy var dataSource = UICollectionViewDiffableDataSource<Sections, ListModel>(collectionView: collectionView) { collectionView, indexPath, listModel in
+  private lazy var dataSource = UICollectionViewDiffableDataSource<ListModelSection, ListModel>(collectionView: collectionView) { collectionView, indexPath, listModel in
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "reusableListCell", for: indexPath) as? CollectionViewCell else {
       assertionFailure("Unable to dequeue colleciton view cell")
       return nil
     }
     cell.configure(with: self.toDoListModel.itemModels[indexPath.item])
+    
     return cell
 }
     
@@ -112,7 +113,7 @@ final class ToDoListViewController: UIViewController {
         dataSource.supplementaryViewProvider = {collectionView, elementKind, indexPath in
           let headerView =  collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView", for: indexPath) as? CustomHeaderView
             
-            headerView?.configureHeader(with: self.toDoListModel.itemModels[indexPath.item])
+            headerView?.configureHeader(with: self.dataSource.snapshot().sectionIdentifiers[indexPath.item])
             
             return headerView
         }
@@ -181,6 +182,8 @@ final class ToDoListViewController: UIViewController {
 
 //MARK: - UICollectionView Delegate
 extension ToDoListViewController: UICollectionViewDelegate {
+    
+    
   
   ///Highlighted cell background
   func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {

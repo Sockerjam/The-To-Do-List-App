@@ -10,7 +10,7 @@ import CoreData
 
 final class ToDoListModelImpl {
     
-    private var dataSource: UICollectionViewDiffableDataSource<Sections, ListModel>?
+    private var dataSource: UICollectionViewDiffableDataSource<ListModelSection, ListModel>?
     
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -20,6 +20,25 @@ final class ToDoListModelImpl {
     
     // MARK: Private
     
+    private func sectionObjectInitiliser(_ weekday: String, _ item: ListModel){
+        
+        var index:Int?
+        
+        for object in 0..<sectionObjects.count {
+            
+            if sectionObjects[object].sectionName == weekday {
+                index = object
+                break
+            }
+        }
+        
+        if let indexMatch = index {
+            sectionObjects[indexMatch].items.append(item)
+        } else {
+            sectionObjects.append(ListModelSection(sectionName: weekday, items: [item]))
+        }
+    }
+    
     ///Loads Data from Persistent Container
     private func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
         do{
@@ -27,7 +46,7 @@ final class ToDoListModelImpl {
         } catch {
             print("Error requesting data \(error)")
         }
-        snapShot(listItems)
+        snapShot(sectionObjects)
     }
     
     // And although this could well be part of the function above, I think it ads clarity if we encapsualte the logic like this
@@ -47,12 +66,14 @@ final class ToDoListModelImpl {
         }
     }
     
-    private func snapShot(_ listModel: [ListModel]) {
-        var snapShot = NSDiffableDataSourceSnapshot<Sections, ListModel>()
+    private func snapShot(_ listModel: [ListModelSection]) {
+        var snapShot = NSDiffableDataSourceSnapshot<ListModelSection, ListModel>()
+  
+        snapShot.appendSections(listModel)
+        for item in listModel {
+            snapShot.appendItems(item.items, toSection: item)
+        }
         
-        snapShot.appendSections([.Monday])
-        
-        snapShot.appendItems(listModel)
         dataSource?.apply(snapShot, animatingDifferences: false)
     }
 }
@@ -65,7 +86,7 @@ extension ToDoListModelImpl: ToDoListModel {
         listItems
     }
     
-    func start(with dataSource: UICollectionViewDiffableDataSource<Sections, ListModel>) {
+    func start(with dataSource: UICollectionViewDiffableDataSource<ListModelSection, ListModel>) {
         self.dataSource = dataSource
         loadData()
     }
@@ -88,6 +109,7 @@ extension ToDoListModelImpl: ToDoListModel {
         newListItem.weekday = weekday
         ///Appends array with new object
         listItems.append(newListItem)
+        sectionObjectInitiliser(weekday, newListItem)
         ///Saves new Data through the Context
         saveData()
         loadData()
