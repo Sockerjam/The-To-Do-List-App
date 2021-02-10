@@ -8,6 +8,7 @@ protocol ToDoListModel {
     func addNewItem(_ item: String, _ weekday: String)
     func deleteItem(at indexPath: IndexPath)
     func markAsDone(at indexPath: IndexPath)
+    func sectionObjectInitialiser(_ weekday: String, _ item: ListModel)
     
     var days:[String] {get}
 }

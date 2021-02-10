@@ -17,7 +17,7 @@ class AddItemVC: UIViewController {
     
     private let viewModel:ToDoListModel!
     
-    private var weekdayList:UISegmentedControl!
+   var weekdayList:UISegmentedControl!
     
     private let viewBackground:UIColor = {
         let backgroundColor = UIColor.systemGray.withAlphaComponent(0.3)
@@ -41,7 +41,7 @@ class AddItemVC: UIViewController {
         return headerLabel
     }()
     
-    private let textField:UITextField = {
+    let textField:UITextField = {
         let textField = UITextField()
         textField.placeholder = "Add New Item"
         textField.textAlignment = .center

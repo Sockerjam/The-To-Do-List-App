@@ -167,6 +167,8 @@ final class ToDoListViewController: UIViewController {
 //    }()
     addItemVC.modalPresentationStyle = .overCurrentContext
     addItemVC.modalTransitionStyle = .crossDissolve
+    addItemVC.textField.text = ""
+    addItemVC.weekdayList.selectedSegmentIndex = -1
     present(addItemVC, animated: true) {
     }
   }

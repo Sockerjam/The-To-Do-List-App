@@ -20,25 +20,6 @@ final class ToDoListModelImpl {
     
     // MARK: Private
     
-    private func sectionObjectInitiliser(_ weekday: String, _ item: ListModel){
-        
-        var index:Int?
-        
-        for object in 0..<sectionObjects.count {
-            
-            if sectionObjects[object].sectionName == weekday {
-                index = object
-                break
-            }
-        }
-        
-        if let indexMatch = index {
-            sectionObjects[indexMatch].items.append(item)
-        } else {
-            sectionObjects.append(ListModelSection(sectionName: weekday, items: [item]))
-        }
-    }
-    
     ///Loads Data from Persistent Container
     private func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
         do{
@@ -109,10 +90,30 @@ extension ToDoListModelImpl: ToDoListModel {
         newListItem.weekday = weekday
         ///Appends array with new object
         listItems.append(newListItem)
-        sectionObjectInitiliser(weekday, newListItem)
+        sectionObjectInitialiser(weekday, newListItem)
         ///Saves new Data through the Context
         saveData()
         loadData()
+    }
+    
+    /// Initlialises the sectionObject property with the aim of having no duplicate weekdays - it's required to not have duplicate header section names
+    func sectionObjectInitialiser(_ weekday: String, _ item: ListModel){
+        
+        var index:Int?
+        
+        for object in 0..<sectionObjects.count {
+            
+            if sectionObjects[object].sectionName == weekday {
+                index = object
+                break
+            }
+        }
+        
+        if let indexMatch = index {
+            sectionObjects[indexMatch].items.append(item)
+        } else {
+            sectionObjects.append(ListModelSection(sectionName: weekday, items: [item]))
+        }
     }
     
     func deleteItem(at indexPath: IndexPath) {
