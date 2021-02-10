@@ -164,6 +164,8 @@ class AddItemVC: UIViewController {
               dismiss(animated: UIView.areAnimationsEnabled)
               return
             }
+            
+            // Added parameter to addNewItem function
             viewModel.addNewItem(text, viewModel.days[weekdayIndex])
             dismiss(animated: true)
         }
