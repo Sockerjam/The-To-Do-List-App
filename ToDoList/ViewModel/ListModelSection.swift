@@ -6,7 +6,7 @@ enum Sections: Hashable, CaseIterable {
 
 struct ListModelSection:Hashable{
     let sectionName:String
-    var items:[ListModel]
+    var items: [ListModel]
 }
 
 

@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 protocol ToDoListModel {
-    var itemModels: [ListModel] { get }
+    var itemModels: [ListModelSection] { get }
     func start(with dataSource: UICollectionViewDiffableDataSource<ListModelSection, ListModel>)
     func update(fromSearchKey searchKey: String?)
     func addNewItem(_ item: String, _ weekday: String)
@@ -22,7 +22,7 @@ extension ToDoListModel {
 
 extension ToDoListModel {
     
-    var days:[String] {
+    var days: [String] {
         ["Mon", "Tue", "Wed", "Thu", "Fri"]
     }
 }

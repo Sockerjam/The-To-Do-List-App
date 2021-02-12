@@ -84,37 +84,43 @@ extension ToDoListModelImpl: ToDoListModel {
     }
     
     func addNewItem(_ item: String, _ weekday: String) {
-        //Create new NSManagedObject for DataModel
-        let newListItem = ListModel(context: context)
-        newListItem.item = item
-        newListItem.weekday = weekday
-        ///Appends array with new object
-        listItems.append(newListItem)
-        sectionObjectInitialiser(weekday, newListItem)
+      var day: Day
+      // Fetch or create day
+      if let fetchedDay = try? context.fetch(Day.fetchRequest()).filter({ $0.name == weekday }).first {
+        day = fetchedDay
+      } else {
+      day = Day(context: context)
+      day.name = weekday
+      }
+      // Create to do
+      let todo = ListModel(context: context)
+      day.addToThingsToDo(todo)
         ///Saves new Data through the Context
         saveData()
         loadData()
     }
     
     /// Initlialises the sectionObject property with the aim of having no duplicate weekdays - it's required to not have duplicate header section names
-    func sectionObjectInitialiser(_ weekday: String, _ item: ListModel){
-        
-        var index:Int?
-        
-        for object in 0..<sectionObjects.count {
-            
-            if sectionObjects[object].sectionName == weekday {
-                index = object
-                break
-            }
-        }
-        
-        if let indexMatch = index {
-            sectionObjects[indexMatch].items.append(item)
-        } else {
-            sectionObjects.append(ListModelSection(sectionName: weekday, items: [item]))
-        }
-    }
+  // I believe this can go as we took care of avoiding day repetition when adding the item to core data already; We should have our datasource (local or network) as the single source of truth and always and only refer to that to check what exists or not.
+  
+//    func sectionObjectInitialiser(_ weekday: String, _ item: ListModel){
+//
+//        var index:Int?
+//
+//        for object in 0..<sectionObjects.count {
+//
+//            if sectionObjects[object].sectionName == weekday {
+//                index = object
+//                break
+//            }
+//        }
+//
+//        if let indexMatch = index {
+//            sectionObjects[indexMatch].items.append(item)
+//        } else {
+//            sectionObjects.append(ListModelSection(sectionName: weekday, items: [item]))
+//        }
+//    }
     
     func deleteItem(at indexPath: IndexPath) {
         context.delete(listItems[indexPath.item])
