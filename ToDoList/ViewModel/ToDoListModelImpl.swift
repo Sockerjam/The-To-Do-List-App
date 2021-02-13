@@ -17,18 +17,37 @@ final class ToDoListModelImpl {
     private var listItems = [ListModel]()
     
     private var sectionObjects = [ListModelSection]()
+  
+  private enum Constants {
+    static let workableWeekDays = 1...5
+  }
+  
+  private lazy var weekDays: [String] = {
+    Constants.workableWeekDays.map {
+      weekdayNameFrom(weekdayNumber: $0)
+    }
+  }()
     
     // MARK: Private
     
     ///Loads Data from Persistent Container
-    private func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
-        do{
-            listItems = try context.fetch(request)
-        } catch {
-            print("Error requesting data \(error)")
-        }
-        snapShot(sectionObjects)
+  private func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
+    do{
+      listItems = try context.fetch(request)
+    } catch {
+      print("Error requesting data \(error)")
     }
+    snapShot(groupAndSort(items: listItems))
+  }
+  
+  private func groupAndSort(items: [ListModel]) -> [ListModelSection] {
+    let dict = Dictionary(grouping:items) { $0.onDay }
+    return weekDays.map {
+      if let items = dict[$0] {
+       return ListModelSection(sectionName: $0, items: items)
+      }
+    }
+  }
     
     // And although this could well be part of the function above, I think it ads clarity if we encapsualte the logic like this
     private func makeRequest(text: String) -> NSFetchRequest<ListModel>  {
@@ -84,20 +103,13 @@ extension ToDoListModelImpl: ToDoListModel {
     }
     
     func addNewItem(_ item: String, _ weekday: String) {
-      var day: Day
-      // Fetch or create day
-      if let fetchedDay = try? context.fetch(Day.fetchRequest()).filter({ $0.name == weekday }).first {
-        day = fetchedDay
-      } else {
-      day = Day(context: context)
-      day.name = weekday
-      }
-      // Create to do
-      let todo = ListModel(context: context)
-      day.addToThingsToDo(todo)
-        ///Saves new Data through the Context
-        saveData()
-        loadData()
+      //Create new NSManagedObject for DataModel
+      let toDo = ListModel(context: context)
+      toDo.item = item
+      toDo.onDay = weekday
+      ///Saves new Data through the Context
+      saveData()
+      loadData()
     }
     
     /// Initlialises the sectionObject property with the aim of having no duplicate weekdays - it's required to not have duplicate header section names
@@ -133,4 +145,13 @@ extension ToDoListModelImpl: ToDoListModel {
         saveData()
         loadData()
     }
+}
+
+extension ToDoListModelImpl {
+  
+  private func weekdayNameFrom(weekdayNumber: Int) -> String {
+      let calendar = Calendar.current
+      let dayIndex = ((weekdayNumber - 1) + (calendar.firstWeekday - 1)) % 7
+      return calendar.shortWeekdaySymbols[dayIndex]
+  }
 }
