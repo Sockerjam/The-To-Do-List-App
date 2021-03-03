@@ -32,9 +32,9 @@ class CollectionViewCell: UICollectionViewCell, Identifiable {
     setContraints()
   }
   
-  func configure(with listModel: ListModel) {
-    label.text = listModel.item
-    checkMark.isHidden = !listModel.done
+    func configure(with listModel: ListModelSection, indexPath: IndexPath) {
+        label.text = listModel.items[indexPath.item].item
+        checkMark.isHidden = !listModel.items[indexPath.item].done
   }
   
   private func setContraints() {
