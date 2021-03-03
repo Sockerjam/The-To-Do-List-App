@@ -144,27 +144,6 @@ final class ToDoListViewController: UIViewController {
   
   @objc private func didTapAddButton(_ sender: UIButton){
     
-    // Moved this function from the global scope - alertController was only initialised once causing placeholder text do dissapear
-//    let alertController: UIAlertController = {
-//      var textField = UITextField()
-//      let alert = UIAlertController(title: "Add New To-Do Item", message: "", preferredStyle: .alert)
-//      alert.addTextField { alertTextField in
-//        alertTextField.placeholder = "Add New Item"
-//          textField = alertTextField
-//      }
-//
-//      let action = UIAlertAction(title: "Add Item", style: .default) { [weak self] alertAction in
-//        guard let text = textField.text,
-//              !text.isEmpty else {
-//          self?.dismiss(animated: UIView.areAnimationsEnabled)
-//          return
-//        }
-//        self?.toDoListModel.addNewItem(text)
-//      }
-//
-//      alert.addAction(action)
-//      return alert
-//    }()
     addItemVC.modalPresentationStyle = .overCurrentContext
     addItemVC.modalTransitionStyle = .crossDissolve
     addItemVC.textField.text = ""
@@ -175,6 +154,7 @@ final class ToDoListViewController: UIViewController {
   
   private func swipeActionDelete(_ indexPath:IndexPath){
     toDoListModel.deleteItem(at: indexPath)
+    
   }
   
   private func swipeActionDone(_ indexPath:IndexPath){

@@ -126,6 +126,7 @@ extension ToDoListModelImpl: ToDoListModel {
       ///Saves new Data through the Context
       saveData()
       loadData()
+        print("listItem count: ",listItems.count)
     }
     
     /// Initlialises the sectionObject property with the aim of having no duplicate weekdays - it's required to not have duplicate header section names
@@ -152,7 +153,6 @@ extension ToDoListModelImpl: ToDoListModel {
     
     func deleteItem(at indexPath: IndexPath) {
         context.delete(listItems[indexPath.item])
-        listItems.remove(at: indexPath.item)
         saveData()
         loadData()
     }
