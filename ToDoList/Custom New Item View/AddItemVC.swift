@@ -13,6 +13,7 @@ class AddItemVC: UIViewController {
     private enum Constant {
         static let textColor = UIColor.white
         static let backgroundColor = UIColor(red: 1, green: 0.70, blue: 0.42, alpha: 1)
+        static let weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"]
     }
     
     private let viewModel:ToDoListModel!
@@ -85,7 +86,7 @@ class AddItemVC: UIViewController {
     
     init(with viewModel:ToDoListModel){
         self.viewModel = viewModel
-        self.weekdayList = UISegmentedControl(items: viewModel.days)
+        self.weekdayList = UISegmentedControl(items: Constant.weekDays)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -166,7 +167,7 @@ class AddItemVC: UIViewController {
             }
             
             // Added parameter to addNewItem function
-            viewModel.addNewItem(text, viewModel.days[weekdayIndex])
+            viewModel.addNewItem(text, Constant.weekDays[weekdayIndex])
             dismiss(animated: true)
         }
         

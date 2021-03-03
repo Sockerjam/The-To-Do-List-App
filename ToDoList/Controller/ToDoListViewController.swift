@@ -76,7 +76,7 @@ final class ToDoListViewController: UIViewController {
       assertionFailure("Unable to dequeue colleciton view cell")
       return nil
     }
-    cell.configure(with: self.toDoListModel.itemModels[indexPath.item])
+    cell.configure(with: self.toDoListModel.items[indexPath.item])
     
     return cell
 }

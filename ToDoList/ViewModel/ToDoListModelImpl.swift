@@ -40,13 +40,25 @@ final class ToDoListModelImpl {
     snapShot(groupAndSort(items: listItems))
   }
   
+    // dict = ["Mon": [ListModel, ListModel], "Tue":[ListModel, ListModel], etc]
   private func groupAndSort(items: [ListModel]) -> [ListModelSection] {
-    let dict = Dictionary(grouping:items) { $0.onDay }
-    return weekDays.map {
-      if let items = dict[$0] {
-       return ListModelSection(sectionName: $0, items: items)
-      }
-    }
+   let dict = Dictionary(grouping:items) { $0.onDay }
+    print(dict)
+    
+    for (day, item) in dict {
+        if !sectionObjects.contains(ListModelSection(sectionName: day ?? "0", items: item)) {
+            sectionObjects.append(ListModelSection(sectionName: day ?? "0", items: item))
+        }
+        }
+    
+    
+//    return weekDays.map {
+//    if let items = dict[$0] {
+//        return ListModelSection(sectionName: $0, items: items)
+//    }
+//  }
+    
+    return sectionObjects
   }
     
     // And although this could well be part of the function above, I think it ads clarity if we encapsualte the logic like this
@@ -80,11 +92,15 @@ final class ToDoListModelImpl {
 
 
 //MARK: - ToDoListModel
-extension ToDoListModelImpl: ToDoListModel {    
+extension ToDoListModelImpl: ToDoListModel {
+    var itemModels: [ListModelSection] {
+        sectionObjects
+    }
     
-    var itemModels: [ListModel] {
+    var items:[ListModel] {
         listItems
     }
+    
     
     func start(with dataSource: UICollectionViewDiffableDataSource<ListModelSection, ListModel>) {
         self.dataSource = dataSource
@@ -136,6 +152,7 @@ extension ToDoListModelImpl: ToDoListModel {
     
     func deleteItem(at indexPath: IndexPath) {
         context.delete(listItems[indexPath.item])
+        listItems.remove(at: indexPath.item)
         saveData()
         loadData()
     }
@@ -149,7 +166,7 @@ extension ToDoListModelImpl: ToDoListModel {
 
 extension ToDoListModelImpl {
   
-  private func weekdayNameFrom(weekdayNumber: Int) -> String {
+   private func weekdayNameFrom(weekdayNumber: Int) -> String {
       let calendar = Calendar.current
       let dayIndex = ((weekdayNumber - 1) + (calendar.firstWeekday - 1)) % 7
       return calendar.shortWeekdaySymbols[dayIndex]
