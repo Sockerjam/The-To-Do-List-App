@@ -76,7 +76,7 @@ final class ToDoListViewController: UIViewController {
       assertionFailure("Unable to dequeue colleciton view cell")
       return nil
     }
-    cell.configure(with: self.toDoListModel.itemModels[indexPath.item], indexPath: indexPath)
+    cell.configure(with: listModel)
     
     return cell
 }
@@ -113,7 +113,7 @@ final class ToDoListViewController: UIViewController {
         dataSource.supplementaryViewProvider = {collectionView, elementKind, indexPath in
           let headerView =  collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView", for: indexPath) as? CustomHeaderView
             
-            headerView?.configureHeader(with: self.toDoListModel.itemModels[indexPath.item])
+            headerView?.configureHeader(with: self.dataSource.snapshot().sectionIdentifiers[indexPath.section])
             
             return headerView
         }
@@ -158,6 +158,10 @@ final class ToDoListViewController: UIViewController {
   }
   
   private func swipeActionDone(_ indexPath:IndexPath){
+    print("cell item: \(indexPath.item)")
+    print("cell row: \(indexPath.row)")
+    print("cell section: \(indexPath.section)")
+    print("cell indexpath: \(indexPath)")
     toDoListModel.markAsDone(at: indexPath)
   }
 }

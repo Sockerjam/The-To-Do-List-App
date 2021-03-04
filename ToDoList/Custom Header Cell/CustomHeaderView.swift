@@ -12,7 +12,7 @@ class CustomHeaderView: UICollectionReusableView {
     
     private let headerLabel:UILabel = {
         let headerLabel = UILabel()
-        headerLabel.font = UIFont(name: "Helvetica", size: 25)
+        headerLabel.font = UIFont(name: "Helvetica", size: 20)
         headerLabel.textColor = .black
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
         return headerLabel
@@ -41,7 +41,7 @@ class CustomHeaderView: UICollectionReusableView {
         headerView.addSubview(headerLabel)
         
         NSLayoutConstraint.activate([
-            headerView.leadingAnchor.constraint(equalTo: leadingAnchor), headerView.trailingAnchor.constraint(equalTo: trailingAnchor), headerView.topAnchor.constraint(equalTo: topAnchor), headerView.bottomAnchor.constraint(equalTo: bottomAnchor), headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15), headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 5)
+            headerView.leadingAnchor.constraint(equalTo: leadingAnchor), headerView.trailingAnchor.constraint(equalTo: trailingAnchor), headerView.topAnchor.constraint(equalTo: topAnchor), headerView.bottomAnchor.constraint(equalTo: bottomAnchor), headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15), headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -2)
         ])
     }
     
