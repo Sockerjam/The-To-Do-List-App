@@ -43,13 +43,6 @@ final class ToDoListModelImpl {
     // dict = ["Mon": [ListModel, ListModel], "Tue":[ListModel, ListModel], etc]
   private func groupAndSort(items: [ListModel]) -> [ListModelSection] {
    let dict = Dictionary(grouping:items) { $0.onDay }
-    print(dict)
-    
-    for (day, item) in dict {
-        if !sectionObjects.contains(ListModelSection(sectionName: day ?? "0", items: item)) {
-            sectionObjects.append(ListModelSection(sectionName: day ?? "0", items: item))
-        }
-        }
     
     
 //    return weekDays.map {
@@ -126,7 +119,6 @@ extension ToDoListModelImpl: ToDoListModel {
       ///Saves new Data through the Context
       saveData()
       loadData()
-        print("listItem count: ",listItems.count)
     }
     
     /// Initlialises the sectionObject property with the aim of having no duplicate weekdays - it's required to not have duplicate header section names
