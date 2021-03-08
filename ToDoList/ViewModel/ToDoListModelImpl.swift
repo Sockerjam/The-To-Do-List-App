@@ -22,10 +22,23 @@ final class ToDoListModelImpl {
         static let workableWeekDays = 1...5
     }
     
-    private lazy var weekDays: [String] = {
-        Constants.workableWeekDays.map {
-            weekdayNameFrom(weekdayNumber: $0)
+//    private lazy var weekDays: [String] = {
+//        Constants.workableWeekDays.map {
+//            weekdayNameFrom(weekdayNumber: $0)
+//        }
+//    }()
+    
+    private var weekDays: [String: Int] = {
+        
+        var weekDays: [String:Int] = [:]
+        
+        let stringy = weekdayNameFrom(weekdayNumber: 0)
+        
+        for i in Constants.workableWeekDays {
+            weekDays[weekdayNameFrom(weekdayNumber: i)] = i-1
         }
+        
+        return weekDays
     }()
     
     // MARK: Private
@@ -40,34 +53,26 @@ final class ToDoListModelImpl {
         snapShot(groupAndSort(items: listItems))
     }
     
-    
     private func groupAndSort(items: [ListModel]) -> [ListModelSection] {
         
-//         dict = ["Mon": [ListModel, ListModel], "Tue":[ListModel, ListModel], etc]
-           let dict = Dictionary(grouping:items) { $0.onDay }
+        let dict = Dictionary(grouping:items) { $0.onDay }
         
-        var testArray = [ListModelSection]()
+        var dictArray = [ListModelSection]()
         
         for (day, item) in dict {
-        testArray += [ListModelSection(sectionName: day ?? "0", items: item)]
+            if let day = day {
+            dictArray += [ListModelSection(sectionName: day, items: item)]
+            }
         }
         
-        sectionObjects = testArray.sorted {
-            if $0.sectionName < $1.sectionName {
+        sectionObjects = dictArray.sorted {
+            
+            if weekDays[$0.sectionName] ?? 0 < weekDays[$1.sectionName] ?? 0 {
                 return true
             } else {
                 return false
             }
         }
-        
-        print("sectionObject: \(sectionObjects)")
-        
-        
-        //    return weekDays.map {
-        //    if let items = dict[$0] {
-        //        return ListModelSection(sectionName: $0, items: items)
-        //    }
-        //  }
         
         return sectionObjects
     }
@@ -146,17 +151,25 @@ extension ToDoListModelImpl: ToDoListModel {
     }
     
     func markAsDone(at indexPath: IndexPath) {
+        print(indexPath.section)
+        sortedListItems(indexPath)
         listItems[indexPath.item].done.toggle()
         saveData()
         loadData()
     }
+    
+    private func sortedListItems(_ indexPath:IndexPath) {
+        
+        let dict = Dictionary(grouping: listItems ) {$0.onDay}
+        
+        print(dict[dataSource?.snapshot().sectionIdentifiers[indexPath.section].sectionName])
+        
+    }
+
 }
 
-extension ToDoListModelImpl {
-    
-    private func weekdayNameFrom(weekdayNumber: Int) -> String {
-        let calendar = Calendar.current
-        let dayIndex = ((weekdayNumber - 1) + (calendar.firstWeekday - 1)) % 7
-        return calendar.shortWeekdaySymbols[dayIndex]
-    }
+private func weekdayNameFrom(weekdayNumber: Int) -> String {
+    let calendar = Calendar.current
+    let dayIndex = ((weekdayNumber) + (calendar.firstWeekday - 1)) % 7
+    return calendar.shortWeekdaySymbols[dayIndex]
 }

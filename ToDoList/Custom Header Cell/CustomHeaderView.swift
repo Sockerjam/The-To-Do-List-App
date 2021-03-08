@@ -40,8 +40,13 @@ class CustomHeaderView: UICollectionReusableView {
         
         headerView.addSubview(headerLabel)
         
+        // Set High Priority For HeaderView To Avoid Constraint Issue
+        let constraintHeight = NSLayoutConstraint(item: headerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30)
+        constraintHeight.priority = .defaultHigh
+        
+        
         NSLayoutConstraint.activate([
-            headerView.leadingAnchor.constraint(equalTo: leadingAnchor), headerView.trailingAnchor.constraint(equalTo: trailingAnchor), headerView.topAnchor.constraint(equalTo: topAnchor), headerView.bottomAnchor.constraint(equalTo: bottomAnchor), headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15), headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -2)
+            headerView.leadingAnchor.constraint(equalTo: leadingAnchor), headerView.trailingAnchor.constraint(equalTo: trailingAnchor), headerView.topAnchor.constraint(equalTo: topAnchor), headerView.bottomAnchor.constraint(equalTo: bottomAnchor), headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15), headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -2), constraintHeight
         ])
     }
     

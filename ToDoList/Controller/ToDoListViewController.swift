@@ -158,10 +158,6 @@ final class ToDoListViewController: UIViewController {
   }
   
   private func swipeActionDone(_ indexPath:IndexPath){
-    print("cell item: \(indexPath.item)")
-    print("cell row: \(indexPath.row)")
-    print("cell section: \(indexPath.section)")
-    print("cell indexpath: \(indexPath)")
     toDoListModel.markAsDone(at: indexPath)
   }
 }
