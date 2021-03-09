@@ -103,6 +103,16 @@ class AddItemVC: UIViewController {
         setupSegmentedControl()
         setConstraints()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification){
+        
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {return}
+        
+        view.frame.origin.y -= keyboardSize.height/4
+        
     }
     
     private func setupSegmentedControl(){
