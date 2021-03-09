@@ -145,25 +145,46 @@ extension ToDoListModelImpl: ToDoListModel {
     }
     
     func deleteItem(at indexPath: IndexPath) {
-        context.delete(listItems[indexPath.item])
+        context.delete(deleteAndToggle(indexPath))
         saveData()
         loadData()
     }
     
     func markAsDone(at indexPath: IndexPath) {
-        print(indexPath.section)
-        sortedListItems(indexPath)
-        listItems[indexPath.item].done.toggle()
+        deleteAndToggle(indexPath).done.toggle()
         saveData()
         loadData()
     }
     
-    private func sortedListItems(_ indexPath:IndexPath) {
+    // Finds correct item to delete and toggle by finding correct Section and correct Item in that Section
+    private func deleteAndToggle (_ indexPath:IndexPath) -> ListModel {
         
-        let dict = Dictionary(grouping: listItems ) {$0.onDay}
+        var itemArray = [ListModel]()
         
-        print(dict[dataSource?.snapshot().sectionIdentifiers[indexPath.section].sectionName])
+        for item in listItems {
+            if item.onDay == dataSource?.snapshot().sectionIdentifiers[indexPath.section].sectionName {
+                itemArray.append(item)
+            }
+        }
         
+        let returnItem = itemFinder(with: itemArray[indexPath.item])
+        
+        return returnItem
+    }
+    
+    private func itemFinder(with selectedItem: ListModel) -> ListModel {
+        
+        var returnItem:ListModel?
+        
+        for item in listItems {
+            if item == selectedItem {
+                returnItem = item
+            }
+        }
+        
+        guard let item = returnItem else {return ListModel()}
+        
+        return item
     }
 
 }

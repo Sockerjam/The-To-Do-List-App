@@ -33,7 +33,21 @@ class CustomHeaderView: UICollectionReusableView {
     }
     
     func configureHeader(with listModel:ListModelSection){
-        headerLabel.text = listModel.sectionName
+        
+        switch listModel.sectionName {
+        case "Mon":
+            headerLabel.text = "Monday"
+        case "Tue":
+            headerLabel.text = "Tuesday"
+        case "Wed":
+            headerLabel.text = "Wednesday"
+        case "Thu":
+            headerLabel.text = "Thursday"
+        case "Fri":
+            headerLabel.text = "Friday"
+        default:
+            headerLabel.text = ""
+        }
     }
     
     private func setConstraints(){
