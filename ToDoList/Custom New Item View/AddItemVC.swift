@@ -18,6 +18,10 @@ class AddItemVC: UIViewController {
     
     private let viewModel:ToDoListModel!
     
+    
+    private var centerYContraintTextEdit:NSLayoutConstraint?
+    private var centerYContraints:NSLayoutConstraint?
+    
    var weekdayList:UISegmentedControl!
     
     private let viewBackground:UIColor = {
@@ -96,6 +100,12 @@ class AddItemVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        changeConstraints(y: 0, condition: false)
+        
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,15 +113,43 @@ class AddItemVC: UIViewController {
         setupSegmentedControl()
         setConstraints()
         
+        
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+    
+    private func changeConstraints(y:CGFloat, condition:Bool){
+        
+        var constraint:NSLayoutConstraint?
+        
+        if !condition {
+            centerYContraints = customView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            centerYContraints?.isActive = true
+            constraint = centerYContraints
+            
+        } else if condition {
+            centerYContraintTextEdit = customView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -y)
+            centerYContraintTextEdit?.isActive = true
+            constraint = centerYContraintTextEdit
+        }
+        
+        print(constraint)
+
     }
     
     @objc func keyboardWillShow(notification: NSNotification){
         
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {return}
         
-        view.frame.origin.y -= keyboardSize.height/4
+        if notification.name == UIResponder.keyboardWillShowNotification {
+            changeConstraints(y: keyboardSize.height/4, condition: true)
+        }
+        
         
     }
     
@@ -133,16 +171,14 @@ class AddItemVC: UIViewController {
         customView.addSubview(weekdayList)
         customView.addSubview(addItemButton)
         
-        
         NSLayoutConstraint.activate([
             customView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            customView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             customView.widthAnchor.constraint(equalToConstant: 300),
             customView.heightAnchor.constraint(equalToConstant: 200),
             headerLabel.centerXAnchor.constraint(equalTo: customView.centerXAnchor),
             headerLabel.topAnchor.constraint(equalTo: customView.topAnchor, constant: 10),
-            textField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            textField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -30),
+            textField.centerXAnchor.constraint(equalTo: customView.centerXAnchor),
+            textField.centerYAnchor.constraint(equalTo: customView.centerYAnchor, constant: -30),
             textField.widthAnchor.constraint(equalToConstant: 250),
             textField.heightAnchor.constraint(equalToConstant: 30),
             cancelButton.trailingAnchor.constraint(equalTo: customView.trailingAnchor, constant: -25),
@@ -163,11 +199,11 @@ class AddItemVC: UIViewController {
     }
     
     @objc private func cancelItem(){
+        changeConstraints(y: 0, condition: false)
         dismiss(animated: true)
     }
     
     @objc private func addItem(){
-        
         if weekdayList.selectedSegmentIndex >= 0 {
             
             let weekdayIndex = weekdayList.selectedSegmentIndex
