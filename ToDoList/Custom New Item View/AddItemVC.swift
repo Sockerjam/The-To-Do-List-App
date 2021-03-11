@@ -101,6 +101,7 @@ class AddItemVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
     }
     
     
@@ -110,8 +111,6 @@ class AddItemVC: UIViewController {
         textField.delegate = self
         setupSegmentedControl()
         setConstraints()
-        changeConstraints(y: 0, condition: false)
-        
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
@@ -164,6 +163,8 @@ class AddItemVC: UIViewController {
         customView.addSubview(weekdayListLabel)
         customView.addSubview(weekdayList)
         customView.addSubview(addItemButton)
+        
+        changeConstraints(y: 0, condition: false)
         
         NSLayoutConstraint.activate([
             customView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
