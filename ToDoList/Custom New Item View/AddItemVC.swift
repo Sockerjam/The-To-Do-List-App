@@ -18,9 +18,8 @@ class AddItemVC: UIViewController {
     
     private let viewModel:ToDoListModel!
     
-    
-    private var centerYContraintTextEdit:NSLayoutConstraint?
-    private var centerYContraints:NSLayoutConstraint?
+    var centerYConstraints:NSLayoutConstraint?
+    var centerYConstraintsTextEdit:NSLayoutConstraint?
     
    var weekdayList:UISegmentedControl!
     
@@ -102,17 +101,16 @@ class AddItemVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        changeConstraints(y: 0, condition: false)
-        
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = viewBackground
+        textField.delegate = self
         setupSegmentedControl()
         setConstraints()
-        
+        changeConstraints(y: 0, condition: false)
         
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -121,24 +119,20 @@ class AddItemVC: UIViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        print("keyboard deinit")
     }
     
     private func changeConstraints(y:CGFloat, condition:Bool){
         
-        var constraint:NSLayoutConstraint?
-        
         if !condition {
-            centerYContraints = customView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-            centerYContraints?.isActive = true
-            constraint = centerYContraints
-            
-        } else if condition {
-            centerYContraintTextEdit = customView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -y)
-            centerYContraintTextEdit?.isActive = true
-            constraint = centerYContraintTextEdit
+            centerYConstraintsTextEdit?.isActive = false
+            centerYConstraints = customView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            centerYConstraints?.isActive = true
+        } else {
+            centerYConstraints?.isActive = false
+            centerYConstraintsTextEdit = customView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -y)
+            centerYConstraintsTextEdit?.isActive = true
         }
-        
-        print(constraint)
 
     }
     
@@ -199,7 +193,6 @@ class AddItemVC: UIViewController {
     }
     
     @objc private func cancelItem(){
-        changeConstraints(y: 0, condition: false)
         dismiss(animated: true)
     }
     
@@ -207,6 +200,7 @@ class AddItemVC: UIViewController {
         if weekdayList.selectedSegmentIndex >= 0 {
             
             let weekdayIndex = weekdayList.selectedSegmentIndex
+            
             
             guard let text = textField.text,
                   !text.isEmpty else {
@@ -221,4 +215,9 @@ class AddItemVC: UIViewController {
         
     }
     
+}
+
+extension AddItemVC : UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+    }
 }

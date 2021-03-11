@@ -148,8 +148,7 @@ final class ToDoListViewController: UIViewController {
     addItemVC.modalTransitionStyle = .crossDissolve
     addItemVC.textField.text = ""
     addItemVC.weekdayList.selectedSegmentIndex = -1
-    present(addItemVC, animated: true) {
-    }
+    present(addItemVC, animated: true)
   }
   
   private func swipeActionDelete(_ indexPath:IndexPath){
