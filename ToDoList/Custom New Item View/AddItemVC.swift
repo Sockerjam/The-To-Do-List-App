@@ -18,8 +18,8 @@ class AddItemVC: UIViewController {
     
     private let viewModel:ToDoListModel!
     
-    var centerYConstraints:NSLayoutConstraint?
-    var centerYConstraintsTextEdit:NSLayoutConstraint?
+    var yConstraints:NSLayoutConstraint?
+    var yConstraintsTextEdit:NSLayoutConstraint?
     
    var weekdayList:UISegmentedControl!
     
@@ -87,6 +87,14 @@ class AddItemVC: UIViewController {
         weekdayListLabel.translatesAutoresizingMaskIntoConstraints = false
         return weekdayListLabel
     }()
+    
+    private let stackView:UIStackView = {
+        let stackView = UIStackView(frame: .zero)
+        stackView.backgroundColor = .clear
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
   
     
     init(with viewModel:ToDoListModel){
@@ -102,6 +110,7 @@ class AddItemVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        
     }
     
     
@@ -110,9 +119,11 @@ class AddItemVC: UIViewController {
         view.backgroundColor = viewBackground
         textField.delegate = self
         setupSegmentedControl()
-        setConstraints()
+        addSubviews()
+        
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
     }
     
@@ -121,29 +132,18 @@ class AddItemVC: UIViewController {
         print("keyboard deinit")
     }
     
-    private func changeConstraints(y:CGFloat, condition:Bool){
-        
-        if !condition {
-            centerYConstraintsTextEdit?.isActive = false
-            centerYConstraints = customView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-            centerYConstraints?.isActive = true
-        } else {
-            centerYConstraints?.isActive = false
-            centerYConstraintsTextEdit = customView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -y)
-            centerYConstraintsTextEdit?.isActive = true
-        }
-
-    }
-    
     @objc func keyboardWillShow(notification: NSNotification){
         
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {return}
         
+
         if notification.name == UIResponder.keyboardWillShowNotification {
-            changeConstraints(y: keyboardSize.height/4, condition: true)
+            stackView.layer.frame.origin.y -= keyboardSize.height/4
         }
-        
-        
+            
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification){
     }
     
     private func setupSegmentedControl(){
@@ -153,10 +153,9 @@ class AddItemVC: UIViewController {
         
     }
     
-    private func setConstraints(){
-        
-        view.addSubview(customView)
-        
+    private func addSubviews(){
+        view.addSubview(stackView)
+        stackView.addArrangedSubview(customView)
         customView.addSubview(headerLabel)
         customView.addSubview(textField)
         customView.addSubview(cancelButton)
@@ -164,12 +163,17 @@ class AddItemVC: UIViewController {
         customView.addSubview(weekdayList)
         customView.addSubview(addItemButton)
         
-        changeConstraints(y: 0, condition: false)
+        setConstraints()
+    }
+    
+    private func setConstraints(){
         
         NSLayoutConstraint.activate([
-            customView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            customView.widthAnchor.constraint(equalToConstant: 300),
-            customView.heightAnchor.constraint(equalToConstant: 200),
+            
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.heightAnchor.constraint(equalToConstant: 200),
+            stackView.widthAnchor.constraint(equalToConstant: 300),
             headerLabel.centerXAnchor.constraint(equalTo: customView.centerXAnchor),
             headerLabel.topAnchor.constraint(equalTo: customView.topAnchor, constant: 10),
             textField.centerXAnchor.constraint(equalTo: customView.centerXAnchor),
@@ -188,7 +192,12 @@ class AddItemVC: UIViewController {
             
         ])
         
+//        customView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//        customView.widthAnchor.constraint(equalToConstant: 300),
+//        customView.heightAnchor.constraint(equalToConstant: 200)
+    
     }
+
     
     @objc private func selectedDay() {
     }
