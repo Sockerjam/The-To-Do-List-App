@@ -22,17 +22,11 @@ final class ToDoListModelImpl {
         static let workableWeekDays = 1...5
     }
     
-//    private lazy var weekDays: [String] = {
-//        Constants.workableWeekDays.map {
-//            weekdayNameFrom(weekdayNumber: $0)
-//        }
-//    }()
-    
     private var weekDays: [String: Int] = {
         
         var weekDays: [String:Int] = [:]
         
-        let stringy = weekdayNameFrom(weekdayNumber: 0)
+//        let stringy = weekdayNameFrom(weekdayNumber: 0)
         
         for i in Constants.workableWeekDays {
             weekDays[weekdayNameFrom(weekdayNumber: i)] = i-1
@@ -191,6 +185,5 @@ extension ToDoListModelImpl: ToDoListModel {
 
 private func weekdayNameFrom(weekdayNumber: Int) -> String {
     let calendar = Calendar.current
-    let dayIndex = ((weekdayNumber) + (calendar.firstWeekday - 1)) % 7
-    return calendar.shortWeekdaySymbols[dayIndex]
+    return calendar.shortWeekdaySymbols[weekdayNumber]
 }

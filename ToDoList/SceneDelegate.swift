@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         
         let vc = ToDoListViewController(viewModel: ToDoListModelImpl())
-        vc.title = "To Do List"
+        vc.title = "The Task Completer"
         let nv = UINavigationController(rootViewController: vc)
         
         window?.rootViewController = nv

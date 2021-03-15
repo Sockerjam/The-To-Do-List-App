@@ -21,7 +21,7 @@ class AddItemVC: UIViewController {
     var yConstraints:NSLayoutConstraint?
     var yConstraintsTextEdit:NSLayoutConstraint?
     
-   var weekdayList:UISegmentedControl!
+    var weekdayList:UISegmentedControl!
     
     private let viewBackground:UIColor = {
         let backgroundColor = UIColor.systemGray.withAlphaComponent(0.3)
@@ -59,7 +59,7 @@ class AddItemVC: UIViewController {
     }()
     
     private let cancelButton:UIButton = {
-       let cancelButton = UIButton()
+        let cancelButton = UIButton()
         cancelButton.setAttributedTitle(.init(string: "Cancel"), for: .normal)
         cancelButton.titleLabel?.font = UIFont(name: "Helvetica", size: 15)
         cancelButton.setTitleColor(Constant.textColor, for: .normal)
@@ -75,7 +75,7 @@ class AddItemVC: UIViewController {
         addItemButton.setTitleColor(Constant.textColor, for: .normal)
         addItemButton.addTarget(self, action: #selector(addItem), for: .touchUpInside)
         addItemButton.translatesAutoresizingMaskIntoConstraints = false
-         return addItemButton
+        return addItemButton
     }()
     
     private let weekdayListLabel:UILabel = {
@@ -95,7 +95,7 @@ class AddItemVC: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-  
+    
     
     init(with viewModel:ToDoListModel){
         self.viewModel = viewModel
@@ -109,6 +109,11 @@ class AddItemVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupSegmentedControl()
+        addSubviews()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         
     }
@@ -117,33 +122,25 @@ class AddItemVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = viewBackground
-        textField.delegate = self
-        setupSegmentedControl()
-        addSubviews()
-        
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        print("keyboard deinit")
-    }
-    
-    @objc func keyboardWillShow(notification: NSNotification){
+    @objc private func keyboardWillShow(notification: NSNotification){
         
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {return}
         
-
-        if notification.name == UIResponder.keyboardWillShowNotification {
-            stackView.layer.frame.origin.y -= keyboardSize.height/4
-        }
+        if notification.name == UIResponder.keyboardWillChangeFrameNotification {
             
+            yConstraints?.isActive = false
+            yConstraintsTextEdit = stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -keyboardSize.height/4)
+            yConstraintsTextEdit?.isActive = true
+            
+        }
+        
     }
     
-    @objc func keyboardWillHide(notification: NSNotification){
+    @objc private func keyboardWillHide(notification: NSNotification){
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     private func setupSegmentedControl(){
@@ -168,18 +165,21 @@ class AddItemVC: UIViewController {
     
     private func setConstraints(){
         
+        yConstraints = stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        yConstraints?.isActive = true
+        
         NSLayoutConstraint.activate([
             
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            //            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             stackView.heightAnchor.constraint(equalToConstant: 200),
             stackView.widthAnchor.constraint(equalToConstant: 300),
-            headerLabel.centerXAnchor.constraint(equalTo: customView.centerXAnchor),
-            headerLabel.topAnchor.constraint(equalTo: customView.topAnchor, constant: 10),
-            textField.centerXAnchor.constraint(equalTo: customView.centerXAnchor),
-            textField.centerYAnchor.constraint(equalTo: customView.centerYAnchor, constant: -30),
+            textField.centerXAnchor.constraint(equalTo: stackView.centerXAnchor),
+            textField.centerYAnchor.constraint(equalTo: stackView.centerYAnchor, constant: -30),
             textField.widthAnchor.constraint(equalToConstant: 250),
             textField.heightAnchor.constraint(equalToConstant: 30),
+            headerLabel.centerXAnchor.constraint(equalTo: customView.centerXAnchor),
+            headerLabel.topAnchor.constraint(equalTo: customView.topAnchor, constant: 10),
             cancelButton.trailingAnchor.constraint(equalTo: customView.trailingAnchor, constant: -25),
             cancelButton.bottomAnchor.constraint(equalTo: customView.bottomAnchor, constant: -2),
             weekdayListLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -192,17 +192,15 @@ class AddItemVC: UIViewController {
             
         ])
         
-//        customView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//        customView.widthAnchor.constraint(equalToConstant: 300),
-//        customView.heightAnchor.constraint(equalToConstant: 200)
-    
     }
-
+    
     
     @objc private func selectedDay() {
     }
     
     @objc private func cancelItem(){
+        stackView.removeFromSuperview()
+        yConstraintsTextEdit?.isActive = false
         dismiss(animated: true)
     }
     
@@ -214,20 +212,17 @@ class AddItemVC: UIViewController {
             
             guard let text = textField.text,
                   !text.isEmpty else {
-              dismiss(animated: UIView.areAnimationsEnabled)
-              return
+                dismiss(animated: UIView.areAnimationsEnabled)
+                return
             }
             
             // Added parameter to addNewItem function
             viewModel.addNewItem(text, Constant.weekDays[weekdayIndex])
+            stackView.removeFromSuperview()
+            yConstraintsTextEdit?.isActive = false
             dismiss(animated: true)
         }
         
     }
     
-}
-
-extension AddItemVC : UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField) {
-    }
 }
