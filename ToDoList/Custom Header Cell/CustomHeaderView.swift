@@ -32,7 +32,7 @@ class CustomHeaderView: UICollectionReusableView {
     setConstraints()
   }
   
-  func configureHeader(with listModel: ListModelSection){
+  func configure(with listModel: ListModelSection){
     headerLabel.text = listModel.sectionName
   }
   

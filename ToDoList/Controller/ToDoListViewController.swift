@@ -118,7 +118,7 @@ final class ToDoListViewController: UIViewController {
     dataSource.supplementaryViewProvider = {collectionView, elementKind, indexPath in
       let headerView =  collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView", for: indexPath) as? CustomHeaderView
       
-      headerView?.configureHeader(with: self.dataSource.snapshot().sectionIdentifiers[indexPath.section])
+      headerView?.configure(with: self.dataSource.snapshot().sectionIdentifiers[indexPath.section])
       
       return headerView
     }
