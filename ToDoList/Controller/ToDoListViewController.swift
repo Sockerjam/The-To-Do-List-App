@@ -79,12 +79,12 @@ final class ToDoListViewController: UIViewController {
     cell.configure(with: listModel)
     
     return cell
-}
-    
-    
+  }
+  
+  
   
   private let toDoListModel: ToDoListModel
-    private let addItemVC: AddItemVC
+  private let addItemVC: AddItemVC
   
   // MARK: Lifecycle
   
@@ -99,11 +99,11 @@ final class ToDoListViewController: UIViewController {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = Constants.collectionViewBackgroundColor
-    }
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    view.backgroundColor = Constants.collectionViewBackgroundColor
+  }
   
   override func viewDidAppear(_ animated: Bool)  {
     super.viewDidAppear(animated)
@@ -112,18 +112,18 @@ final class ToDoListViewController: UIViewController {
   }
   
   // MARK: Private functions
-    
-    // Dequeue Header View
-    private func headerConfiguration(){
-        dataSource.supplementaryViewProvider = {collectionView, elementKind, indexPath in
-          let headerView =  collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView", for: indexPath) as? CustomHeaderView
-            
-            headerView?.configureHeader(with: self.dataSource.snapshot().sectionIdentifiers[indexPath.section])
-            
-            return headerView
-        }
+  
+  // Dequeue Header View
+  private func headerConfiguration(){
+    dataSource.supplementaryViewProvider = {collectionView, elementKind, indexPath in
+      let headerView =  collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView", for: indexPath) as? CustomHeaderView
+      
+      headerView?.configureHeader(with: self.dataSource.snapshot().sectionIdentifiers[indexPath.section])
+      
+      return headerView
     }
-    
+  }
+  
   private func navBarSetup(){
     let navBarApperance = UINavigationBarAppearance()
     navBarApperance.backgroundColor = Constants.barBackgroundColor
@@ -143,7 +143,7 @@ final class ToDoListViewController: UIViewController {
     view.addSubview(collectionView)
     ///Layout Constraints for CollectionView
     NSLayoutConstraint.activate([
-        collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor), collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor), collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+      collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor), collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor), collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
     ])
   }
   
@@ -168,8 +168,8 @@ final class ToDoListViewController: UIViewController {
 
 //MARK: - UICollectionView Delegate
 extension ToDoListViewController: UICollectionViewDelegate {
-    
-    
+  
+  
   
   ///Highlighted cell background
   func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
@@ -182,7 +182,7 @@ extension ToDoListViewController: UICollectionViewDelegate {
     let cell = collectionView.cellForItem(at: indexPath) as! CollectionViewCell
     cell.backgroundColor = .white
   }
-
+  
 }
 
 //MARK: - SearchResultsUpdating
@@ -191,5 +191,5 @@ extension ToDoListViewController : UISearchResultsUpdating {
   func updateSearchResults(for searchController: UISearchController) {
     toDoListModel.update(fromSearchKey: searchController.searchBar.text)
   }
-    
+  
 }
