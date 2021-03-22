@@ -13,27 +13,20 @@ final class ToDoListModelImpl {
     private var dataSource: UICollectionViewDiffableDataSource<ListModelSection, ListModel>?
     
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    private var listItems = [ListModel]()
-    
-    private var sectionObjects = [ListModelSection]()
-    
-    private enum Constants {
-        static let workableWeekDays = 1...5
+  
+  private var listItems = [ListModel]()
+  
+  private var sectionObjects = [ListModelSection]()
+  
+  private enum Constants {
+    static let workableWeekDays = 1...5
+  }
+  
+  private lazy var weekDays: [String] = {
+    Constants.workableWeekDays.map {
+      weekdayNameFrom(weekdayNumber: $0)
     }
-    
-    private var weekDays: [String: Int] = {
-        
-        var weekDays: [String:Int] = [:]
-        
-//        let stringy = weekdayNameFrom(weekdayNumber: 0)
-        
-        for i in Constants.workableWeekDays {
-            weekDays[weekdayNameFrom(weekdayNumber: i)] = i-1
-        }
-        
-        return weekDays
-    }()
+  }()
     
     // MARK: Private
     
@@ -47,29 +40,17 @@ final class ToDoListModelImpl {
         snapShot(groupAndSort(items: listItems))
     }
     
-    private func groupAndSort(items: [ListModel]) -> [ListModelSection] {
-        
-        let dict = Dictionary(grouping:items) { $0.onDay }
-        
-        var dictArray = [ListModelSection]()
-        
-        for (day, item) in dict {
-            if let day = day {
-            dictArray += [ListModelSection(sectionName: day, items: item)]
-            }
-        }
-        
-        sectionObjects = dictArray.sorted {
-            
-            if weekDays[$0.sectionName] ?? 0 < weekDays[$1.sectionName] ?? 0 {
-                return true
-            } else {
-                return false
-            }
-        }
-        
-        return sectionObjects
+  private func groupAndSort(items: [ListModel]) -> [ListModelSection] {
+    
+    let dict = Dictionary(grouping: items) { $0.onDay }
+      .mapValues { items in
+        ListModelSection(sectionName: (items.first?.onDay) ?? "", items: items)
+      }
+    
+    return dict.values.sorted {
+      weekDays.firstIndex(of: $0.sectionName) ?? 0 < weekDays.firstIndex(of: $1.sectionName) ?? 0
     }
+  }
     
     // And although this could well be part of the function above, I think it ads clarity if we encapsualte the logic like this
     private func makeRequest(text: String) -> NSFetchRequest<ListModel>  {
@@ -185,5 +166,5 @@ extension ToDoListModelImpl: ToDoListModel {
 
 private func weekdayNameFrom(weekdayNumber: Int) -> String {
     let calendar = Calendar.current
-    return calendar.shortWeekdaySymbols[weekdayNumber]
+    return calendar.weekdaySymbols[weekdayNumber]
 }
