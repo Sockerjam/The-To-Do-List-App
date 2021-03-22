@@ -18,6 +18,29 @@ final class ToDoListModelImpl {
     
     private var sectionObjects = [ListModelSection]()
     
+    private enum Constants {
+        static let workableWeekDays = 1...5
+    }
+    
+//    private lazy var weekDays: [String] = {
+//        Constants.workableWeekDays.map {
+//            weekdayNameFrom(weekdayNumber: $0)
+//        }
+//    }()
+    
+    private var weekDays: [String: Int] = {
+        
+        var weekDays: [String:Int] = [:]
+        
+        let stringy = weekdayNameFrom(weekdayNumber: 0)
+        
+        for i in Constants.workableWeekDays {
+            weekDays[weekdayNameFrom(weekdayNumber: i)] = i-1
+        }
+        
+        return weekDays
+    }()
+    
     // MARK: Private
     
     ///Loads Data from Persistent Container
@@ -27,7 +50,31 @@ final class ToDoListModelImpl {
         } catch {
             print("Error requesting data \(error)")
         }
-        snapShot(sectionObjects)
+        snapShot(groupAndSort(items: listItems))
+    }
+    
+    private func groupAndSort(items: [ListModel]) -> [ListModelSection] {
+        
+        let dict = Dictionary(grouping:items) { $0.onDay }
+        
+        var dictArray = [ListModelSection]()
+        
+        for (day, item) in dict {
+            if let day = day {
+            dictArray += [ListModelSection(sectionName: day, items: item)]
+            }
+        }
+        
+        sectionObjects = dictArray.sorted {
+            
+            if weekDays[$0.sectionName] ?? 0 < weekDays[$1.sectionName] ?? 0 {
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        return sectionObjects
     }
     
     // And although this could well be part of the function above, I think it ads clarity if we encapsualte the logic like this
@@ -49,7 +96,7 @@ final class ToDoListModelImpl {
     
     private func snapShot(_ listModel: [ListModelSection]) {
         var snapShot = NSDiffableDataSourceSnapshot<ListModelSection, ListModel>()
-  
+        
         snapShot.appendSections(listModel)
         for item in listModel {
             snapShot.appendItems(item.items, toSection: item)
@@ -61,11 +108,15 @@ final class ToDoListModelImpl {
 
 
 //MARK: - ToDoListModel
-extension ToDoListModelImpl: ToDoListModel {    
+extension ToDoListModelImpl: ToDoListModel {
+    var itemModels: [ListModelSection] {
+        sectionObjects
+    }
     
-    var itemModels: [ListModel] {
+    var items:[ListModel] {
         listItems
     }
+    
     
     func start(with dataSource: UICollectionViewDiffableDataSource<ListModelSection, ListModel>) {
         self.dataSource = dataSource
@@ -85,46 +136,61 @@ extension ToDoListModelImpl: ToDoListModel {
     
     func addNewItem(_ item: String, _ weekday: String) {
         //Create new NSManagedObject for DataModel
-        let newListItem = ListModel(context: context)
-        newListItem.item = item
-        newListItem.weekday = weekday
-        ///Appends array with new object
-        listItems.append(newListItem)
-        sectionObjectInitialiser(weekday, newListItem)
+        let toDo = ListModel(context: context)
+        toDo.item = item
+        toDo.onDay = weekday
         ///Saves new Data through the Context
         saveData()
         loadData()
     }
     
-    /// Initlialises the sectionObject property with the aim of having no duplicate weekdays - it's required to not have duplicate header section names
-    func sectionObjectInitialiser(_ weekday: String, _ item: ListModel){
-        
-        var index:Int?
-        
-        for object in 0..<sectionObjects.count {
-            
-            if sectionObjects[object].sectionName == weekday {
-                index = object
-                break
-            }
-        }
-        
-        if let indexMatch = index {
-            sectionObjects[indexMatch].items.append(item)
-        } else {
-            sectionObjects.append(ListModelSection(sectionName: weekday, items: [item]))
-        }
-    }
-    
     func deleteItem(at indexPath: IndexPath) {
-        context.delete(listItems[indexPath.item])
+        context.delete(deleteAndToggle(indexPath))
         saveData()
         loadData()
     }
     
     func markAsDone(at indexPath: IndexPath) {
-        listItems[indexPath.item].done.toggle()
+        deleteAndToggle(indexPath).done.toggle()
         saveData()
         loadData()
     }
+    
+    // Finds correct item to delete and toggle by finding correct Section and correct Item in that Section
+    private func deleteAndToggle (_ indexPath:IndexPath) -> ListModel {
+        
+        var itemArray = [ListModel]()
+        
+        for item in listItems {
+            if item.onDay == dataSource?.snapshot().sectionIdentifiers[indexPath.section].sectionName {
+                itemArray.append(item)
+            }
+        }
+        
+        let returnItem = itemFinder(with: itemArray[indexPath.item])
+        
+        return returnItem
+    }
+    
+    private func itemFinder(with selectedItem: ListModel) -> ListModel {
+        
+        var returnItem:ListModel?
+        
+        for item in listItems {
+            if item == selectedItem {
+                returnItem = item
+            }
+        }
+        
+        guard let item = returnItem else {return ListModel()}
+        
+        return item
+    }
+
+}
+
+private func weekdayNameFrom(weekdayNumber: Int) -> String {
+    let calendar = Calendar.current
+    let dayIndex = ((weekdayNumber) + (calendar.firstWeekday - 1)) % 7
+    return calendar.shortWeekdaySymbols[dayIndex]
 }

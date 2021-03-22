@@ -12,7 +12,7 @@ class CustomHeaderView: UICollectionReusableView {
     
     private let headerLabel:UILabel = {
         let headerLabel = UILabel()
-        headerLabel.font = UIFont(name: "Helvetica", size: 30)
+        headerLabel.font = UIFont(name: "Helvetica", size: 20)
         headerLabel.textColor = .black
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
         return headerLabel
@@ -25,23 +25,43 @@ class CustomHeaderView: UICollectionReusableView {
         headerView.translatesAutoresizingMaskIntoConstraints = false
         return headerView
     }()
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         addSubview(headerView)
-        headerView.addSubview(headerLabel)
         setConstraints()
     }
     
     func configureHeader(with listModel:ListModelSection){
-        headerLabel.text = listModel.sectionName
+        
+        switch listModel.sectionName {
+        case "Mon":
+            headerLabel.text = "Monday"
+        case "Tue":
+            headerLabel.text = "Tuesday"
+        case "Wed":
+            headerLabel.text = "Wednesday"
+        case "Thu":
+            headerLabel.text = "Thursday"
+        case "Fri":
+            headerLabel.text = "Friday"
+        default:
+            headerLabel.text = ""
+        }
     }
     
     private func setConstraints(){
         
-        translatesAutoresizingMaskIntoConstraints = false
+        headerView.addSubview(headerLabel)
         
-        NSLayoutConstraint.activate([headerView.leadingAnchor.constraint(equalTo: leadingAnchor), headerView.trailingAnchor.constraint(equalTo: trailingAnchor), headerView.topAnchor.constraint(equalTo: topAnchor), headerView.bottomAnchor.constraint(equalTo: bottomAnchor), headerView.heightAnchor.constraint(equalToConstant: 30), headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15)])
+        // Set High Priority For HeaderView To Avoid Constraint Issue
+        let constraintHeight = NSLayoutConstraint(item: headerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 30)
+        constraintHeight.priority = .defaultHigh
+        
+        
+        NSLayoutConstraint.activate([
+            headerView.leadingAnchor.constraint(equalTo: leadingAnchor), headerView.trailingAnchor.constraint(equalTo: trailingAnchor), headerView.topAnchor.constraint(equalTo: topAnchor), headerView.bottomAnchor.constraint(equalTo: bottomAnchor), headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15), headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -2), constraintHeight
+        ])
     }
     
 }

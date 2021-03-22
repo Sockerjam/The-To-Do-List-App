@@ -76,7 +76,7 @@ final class ToDoListViewController: UIViewController {
       assertionFailure("Unable to dequeue colleciton view cell")
       return nil
     }
-    cell.configure(with: self.toDoListModel.itemModels[indexPath.item])
+    cell.configure(with: listModel)
     
     return cell
 }
@@ -113,7 +113,7 @@ final class ToDoListViewController: UIViewController {
         dataSource.supplementaryViewProvider = {collectionView, elementKind, indexPath in
           let headerView =  collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView", for: indexPath) as? CustomHeaderView
             
-            headerView?.configureHeader(with: self.dataSource.snapshot().sectionIdentifiers[indexPath.item])
+            headerView?.configureHeader(with: self.dataSource.snapshot().sectionIdentifiers[indexPath.section])
             
             return headerView
         }
@@ -144,27 +144,6 @@ final class ToDoListViewController: UIViewController {
   
   @objc private func didTapAddButton(_ sender: UIButton){
     
-    // Moved this function from the global scope - alertController was only initialised once causing placeholder text do dissapear
-//    let alertController: UIAlertController = {
-//      var textField = UITextField()
-//      let alert = UIAlertController(title: "Add New To-Do Item", message: "", preferredStyle: .alert)
-//      alert.addTextField { alertTextField in
-//        alertTextField.placeholder = "Add New Item"
-//          textField = alertTextField
-//      }
-//
-//      let action = UIAlertAction(title: "Add Item", style: .default) { [weak self] alertAction in
-//        guard let text = textField.text,
-//              !text.isEmpty else {
-//          self?.dismiss(animated: UIView.areAnimationsEnabled)
-//          return
-//        }
-//        self?.toDoListModel.addNewItem(text)
-//      }
-//
-//      alert.addAction(action)
-//      return alert
-//    }()
     addItemVC.modalPresentationStyle = .overCurrentContext
     addItemVC.modalTransitionStyle = .crossDissolve
     addItemVC.textField.text = ""
@@ -175,6 +154,7 @@ final class ToDoListViewController: UIViewController {
   
   private func swipeActionDelete(_ indexPath:IndexPath){
     toDoListModel.deleteItem(at: indexPath)
+    
   }
   
   private func swipeActionDone(_ indexPath:IndexPath){

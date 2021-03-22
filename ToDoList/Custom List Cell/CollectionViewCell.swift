@@ -32,19 +32,19 @@ class CollectionViewCell: UICollectionViewCell, Identifiable {
     setContraints()
   }
   
-  func configure(with listModel: ListModel) {
-    label.text = listModel.item
-    checkMark.isHidden = !listModel.done
+    func configure(with listModel: ListModel) {
+        label.text = listModel.item
+        checkMark.isHidden = !listModel.done
   }
   
   private func setContraints() {
     NSLayoutConstraint.activate([
       label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
       label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
-      checkMark.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+        checkMark.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
       checkMark.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
       checkMark.widthAnchor.constraint(equalToConstant: 20),
-      checkMark.heightAnchor.constraint(equalToConstant: 20)
+      checkMark.heightAnchor.constraint(equalToConstant: 15)
     ])
   }
 }
