@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A67C0A326091E3C00DF3057 /* WeekDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A67C0A226091E3C00DF3057 /* WeekDays.swift */; };
 		2AC0A88925BDE60B002A3C15 /* ListModelSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0A88825BDE60B002A3C15 /* ListModelSection.swift */; };
 		2AC0A88E25BDE84A002A3C15 /* ToDoListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0A88D25BDE84A002A3C15 /* ToDoListModel.swift */; };
 		920CDD5925A5D9E400A97DFF /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 920CDD5725A5D9E400A97DFF /* DataModel.xcdatamodeld */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A67C0A226091E3C00DF3057 /* WeekDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDays.swift; sourceTree = "<group>"; };
 		2AC0A88825BDE60B002A3C15 /* ListModelSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListModelSection.swift; sourceTree = "<group>"; };
 		2AC0A88D25BDE84A002A3C15 /* ToDoListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListModel.swift; sourceTree = "<group>"; };
 		920CDD5825A5D9E400A97DFF /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				920CDD5725A5D9E400A97DFF /* DataModel.xcdatamodeld */,
+				2A67C0A226091E3C00DF3057 /* WeekDays.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -217,6 +220,7 @@
 			files = (
 				9274F45525D2CD5E000CF3ED /* CustomHeaderView.swift in Sources */,
 				926726D625AF57FB0014A423 /* ToDoListViewController.swift in Sources */,
+				2A67C0A326091E3C00DF3057 /* WeekDays.swift in Sources */,
 				2AC0A88E25BDE84A002A3C15 /* ToDoListModel.swift in Sources */,
 				92B4ED8025AC84A2004BB257 /* ToDoListModelImpl.swift in Sources */,
 				920CDD5925A5D9E400A97DFF /* DataModel.xcdatamodeld in Sources */,

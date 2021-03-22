@@ -13,7 +13,7 @@ class AddItemVC: UIViewController {
     private enum Constant {
         static let textColor = UIColor.white
         static let backgroundColor = UIColor(red: 1, green: 0.70, blue: 0.42, alpha: 1)
-        static let weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+      static let weekDays = WeekDays.shortNames
     }
     
     private let viewModel:ToDoListModel!
