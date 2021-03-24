@@ -18,6 +18,8 @@ final class ToDoListViewController: UIViewController {
   }
   
   // MARK: Private properties
+    
+    private let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
   
   private lazy var layout: UICollectionViewCompositionalLayout = {
     var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -60,6 +62,17 @@ final class ToDoListViewController: UIViewController {
     item.tintColor = .white
     return item
   }()
+    
+    private lazy var instructionLabel:UILabel = {
+        let instructionLabel = UILabel()
+        instructionLabel.text = "Click + To Add Your First Task"
+        instructionLabel.font = UIFont(name: "Helvetica", size: 0)
+        instructionLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        instructionLabel.textColor = .white
+        instructionLabel.alpha = 0
+        instructionLabel.translatesAutoresizingMaskIntoConstraints = false
+        return instructionLabel
+    }()
   
   private lazy var searchController: UISearchController = {
     let searchController = UISearchController(searchResultsController: nil)
@@ -136,6 +149,18 @@ final class ToDoListViewController: UIViewController {
     navigationItem.rightBarButtonItem = buttonItem
     definesPresentationContext = true
     navigationController?.navigationBar.prefersLargeTitles = true
+    
+    if !appDelegate.hasLaunched {
+        if let navigationBar = navigationController?.navigationBar {
+        navigationController?.navigationBar.addSubview(instructionLabel)
+            NSLayoutConstraint.activate([instructionLabel.topAnchor.constraint(equalTo: navigationBar.topAnchor, constant: 10 ), instructionLabel.centerXAnchor.constraint(equalTo: navigationBar.centerXAnchor)])
+            UILabel.animate(withDuration: 3) {
+                self.instructionLabel.alpha = 1
+            } completion: { (bool) in
+                UserDefaults.standard.setValue(true, forKey: "AppHasLaunched")
+            }
+    }
+    }
   }
   
   ///CollectionViewListConstraints
@@ -145,6 +170,7 @@ final class ToDoListViewController: UIViewController {
     NSLayoutConstraint.activate([
         collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor), collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor), collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
     ])
+    
   }
   
   @objc private func didTapAddButton(_ sender: UIButton){

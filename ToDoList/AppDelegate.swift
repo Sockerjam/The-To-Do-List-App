@@ -11,10 +11,13 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    /// Check if user has laucnhed the App once
+    var hasLaunched:Bool!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        hasLaunched = UserDefaults.standard.bool(forKey: "AppHasLaunched")
+        
         return true
     }
 
@@ -57,6 +60,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+
+    
+    
 
 
 }
