@@ -101,7 +101,20 @@ extension ToDoListModelImpl: ToDoListModel {
     //Create new NSManagedObject for DataModel
     let toDo = ListModel(context: context)
     toDo.item = item
-    toDo.onDay = weekday
+    switch weekday {
+    case "Mon":
+        toDo.onDay = "Monday"
+    case "Tue":
+        toDo.onDay = "Tuesday"
+    case "Wed":
+        toDo.onDay = "Wednesday"
+    case "Thu":
+        toDo.onDay = "Thursday"
+    case "Fri":
+        toDo.onDay = "Friday"
+    default:
+        return
+    }
     ///Saves new Data through the Context
     saveData()
     loadData()
@@ -121,6 +134,7 @@ extension ToDoListModelImpl: ToDoListModel {
   
   // Finds correct item to delete and toggle by finding correct Section and correct Item in that Section
   private func deleteAndToggle (_ indexPath:IndexPath) -> ListModel {
+    
     
     var itemArray = [ListModel]()
     
