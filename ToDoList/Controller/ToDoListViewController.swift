@@ -46,9 +46,9 @@ final class ToDoListViewController: UIViewController {
   
   private lazy var collectionView: UICollectionView = {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "reusableListCell")
+    // Register Cell
+    collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.cellID)
     // Registered Header View
-//    collectionView.register(UINib(nibName: "CustomHeaderView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView")
     collectionView.register(CustomHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CustomHeaderView.headerID)
     collectionView.backgroundColor = Constants.collectionViewBackgroundColor
     collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,7 +73,7 @@ final class ToDoListViewController: UIViewController {
   }()
   
   private lazy var dataSource = UICollectionViewDiffableDataSource<ListModelSection, ListModel>(collectionView: collectionView) { collectionView, indexPath, listModel in
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "reusableListCell", for: indexPath) as? CollectionViewCell else {
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.cellID, for: indexPath) as? CollectionViewCell else {
       assertionFailure("Unable to dequeue colleciton view cell")
       return nil
     }

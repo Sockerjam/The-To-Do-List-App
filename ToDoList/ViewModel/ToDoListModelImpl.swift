@@ -31,7 +31,7 @@ final class ToDoListModelImpl {
     
     let dict = Dictionary(grouping: items) { $0.onDay }
       .mapValues { items -> ListModelSection in
-        let onDayIndex = WeekDays.shortNames.firstIndex(of: items.first?.onDay ?? "") ?? 0
+        let onDayIndex = WeekDays.longNames.firstIndex(of: items.first?.onDay ?? "") ?? 0
         return ListModelSection(sectionName: WeekDays.longNames[onDayIndex], items: items)
       }
     

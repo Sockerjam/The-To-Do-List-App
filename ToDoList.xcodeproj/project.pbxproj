@@ -12,10 +12,8 @@
 		2AC0A88E25BDE84A002A3C15 /* ToDoListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0A88D25BDE84A002A3C15 /* ToDoListModel.swift */; };
 		920CDD5925A5D9E400A97DFF /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 920CDD5725A5D9E400A97DFF /* DataModel.xcdatamodeld */; };
 		92588B2425CAD74C00AA6239 /* AddItemVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92588B2225CAD74C00AA6239 /* AddItemVC.swift */; };
-		92588B2525CAD74C00AA6239 /* AddItemVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92588B2325CAD74C00AA6239 /* AddItemVC.xib */; };
 		926726D625AF57FB0014A423 /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926726D525AF57FB0014A423 /* ToDoListViewController.swift */; };
 		926748F325B58B7400AE1624 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926748F125B58B7400AE1624 /* CollectionViewCell.swift */; };
-		926748F425B58B7400AE1624 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 926748F225B58B7400AE1624 /* CollectionViewCell.xib */; };
 		9274F45525D2CD5E000CF3ED /* CustomHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9274F45325D2CD5E000CF3ED /* CustomHeaderView.swift */; };
 		92982C4025A31A1000C9DDAD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92982C3F25A31A1000C9DDAD /* AppDelegate.swift */; };
 		92982C4225A31A1000C9DDAD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92982C4125A31A1000C9DDAD /* SceneDelegate.swift */; };
@@ -30,10 +28,8 @@
 		2AC0A88D25BDE84A002A3C15 /* ToDoListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListModel.swift; sourceTree = "<group>"; };
 		920CDD5825A5D9E400A97DFF /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		92588B2225CAD74C00AA6239 /* AddItemVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemVC.swift; sourceTree = "<group>"; };
-		92588B2325CAD74C00AA6239 /* AddItemVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddItemVC.xib; sourceTree = "<group>"; };
 		926726D525AF57FB0014A423 /* ToDoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
 		926748F125B58B7400AE1624 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
-		926748F225B58B7400AE1624 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
 		9274F45325D2CD5E000CF3ED /* CustomHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeaderView.swift; sourceTree = "<group>"; };
 		92982C3C25A31A1000C9DDAD /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92982C3F25A31A1000C9DDAD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -68,7 +64,6 @@
 			isa = PBXGroup;
 			children = (
 				92588B2225CAD74C00AA6239 /* AddItemVC.swift */,
-				92588B2325CAD74C00AA6239 /* AddItemVC.xib */,
 			);
 			path = "Custom New Item View";
 			sourceTree = "<group>";
@@ -85,7 +80,6 @@
 			isa = PBXGroup;
 			children = (
 				926748F125B58B7400AE1624 /* CollectionViewCell.swift */,
-				926748F225B58B7400AE1624 /* CollectionViewCell.xib */,
 			);
 			path = "Custom List Cell";
 			sourceTree = "<group>";
@@ -202,8 +196,6 @@
 			files = (
 				92982C4C25A31A1200C9DDAD /* LaunchScreen.storyboard in Resources */,
 				92982C4925A31A1200C9DDAD /* Assets.xcassets in Resources */,
-				926748F425B58B7400AE1624 /* CollectionViewCell.xib in Resources */,
-				92588B2525CAD74C00AA6239 /* AddItemVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
