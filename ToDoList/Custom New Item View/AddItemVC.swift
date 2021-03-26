@@ -61,7 +61,8 @@ class AddItemVC: UIViewController {
     private let cancelButton:UIButton = {
         let cancelButton = UIButton()
         cancelButton.setAttributedTitle(.init(string: "Cancel"), for: .normal)
-        cancelButton.titleLabel?.font = UIFont(name: "Helvetica", size: 15)
+        cancelButton.titleLabel?.font = UIFont(name: "Helvetica", size: 0)
+        cancelButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
         cancelButton.setTitleColor(Constant.textColor, for: .normal)
         cancelButton.addTarget(self, action: #selector(cancelItem), for: .touchUpInside)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
@@ -70,8 +71,9 @@ class AddItemVC: UIViewController {
     
     private let addItemButton:UIButton = {
         let addItemButton = UIButton()
-        addItemButton.setAttributedTitle(.init(string: "Done"), for: .normal)
-        addItemButton.titleLabel?.font = UIFont(name: "Helvetica", size: 15)
+        addItemButton.setAttributedTitle(.init(string: "Confirm"), for: .normal)
+        addItemButton.titleLabel?.font = UIFont(name: "Helvetica", size: 0)
+        addItemButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
         addItemButton.setTitleColor(Constant.textColor, for: .normal)
         addItemButton.addTarget(self, action: #selector(addItem), for: .touchUpInside)
         addItemButton.translatesAutoresizingMaskIntoConstraints = false
