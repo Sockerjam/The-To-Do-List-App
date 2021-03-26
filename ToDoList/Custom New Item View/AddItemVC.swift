@@ -13,7 +13,7 @@ class AddItemVC: UIViewController {
     private enum Constant {
         static let textColor = UIColor.white
         static let backgroundColor = UIColor(red: 1, green: 0.70, blue: 0.42, alpha: 1)
-        static let weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+      static let weekDays = WeekDays.shortNames
     }
     
     private let viewModel:ToDoListModel!
@@ -38,7 +38,7 @@ class AddItemVC: UIViewController {
     
     private let headerLabel:UILabel = {
         let headerLabel = UILabel()
-        headerLabel.text = "Add New To-Do Item"
+        headerLabel.text = "Add New Task Item"
         headerLabel.font = UIFont(name: "Helvetica", size: 0)
         headerLabel.font = UIFont.boldSystemFont(ofSize: 20)
         headerLabel.textColor = Constant.textColor
@@ -48,7 +48,7 @@ class AddItemVC: UIViewController {
     
     let textField:UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Enter Item Here"
+        textField.placeholder = "Enter Task Here"
         textField.textAlignment = .center
         textField.textColor = .black
         textField.font = UIFont(name: "Helvetica", size: 15)
@@ -82,7 +82,7 @@ class AddItemVC: UIViewController {
     
     private let weekdayListLabel:UILabel = {
         let weekdayListLabel = UILabel()
-        weekdayListLabel.text = "Add Item For: "
+        weekdayListLabel.text = "Complete Task On: "
         weekdayListLabel.textColor = Constant.textColor
         weekdayListLabel.font = UIFont(name: "Helvetive", size: 0)
         weekdayListLabel.font = UIFont.boldSystemFont(ofSize: 15)

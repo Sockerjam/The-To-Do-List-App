@@ -46,9 +46,10 @@ final class ToDoListViewController: UIViewController {
   
   private lazy var collectionView: UICollectionView = {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "reusableListCell")
+    // Register Cell
+    collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.cellID)
     // Registered Header View
-    collectionView.register(UINib(nibName: "CustomHeaderView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView")
+    collectionView.register(CustomHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CustomHeaderView.headerID)
     collectionView.backgroundColor = Constants.collectionViewBackgroundColor
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     collectionView.delegate = self
@@ -83,7 +84,7 @@ final class ToDoListViewController: UIViewController {
   }()
   
   private lazy var dataSource = UICollectionViewDiffableDataSource<ListModelSection, ListModel>(collectionView: collectionView) { collectionView, indexPath, listModel in
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "reusableListCell", for: indexPath) as? CollectionViewCell else {
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.cellID, for: indexPath) as? CollectionViewCell else {
       assertionFailure("Unable to dequeue colleciton view cell")
       return nil
     }
@@ -114,6 +115,7 @@ final class ToDoListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.collectionViewBackgroundColor
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
     }
   
   override func viewDidAppear(_ animated: Bool)  {
@@ -127,7 +129,7 @@ final class ToDoListViewController: UIViewController {
     // Dequeue Header View
     private func headerConfiguration(){
         dataSource.supplementaryViewProvider = {collectionView, elementKind, indexPath in
-          let headerView =  collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "reusableHeaderView", for: indexPath) as? CustomHeaderView
+          let headerView =  collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CustomHeaderView.headerID, for: indexPath) as? CustomHeaderView
             
             headerView?.configureHeader(with: self.dataSource.snapshot().sectionIdentifiers[indexPath.section])
             

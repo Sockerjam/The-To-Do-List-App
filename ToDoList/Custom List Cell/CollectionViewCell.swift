@@ -8,6 +8,8 @@
 import UIKit
 
 class CollectionViewCell: UICollectionViewCell, Identifiable {
+    
+    static let cellID = "reusableListCell"
   
   private let label: UILabel = {
     let l = UILabel()
@@ -23,15 +25,19 @@ class CollectionViewCell: UICollectionViewCell, Identifiable {
     c.translatesAutoresizingMaskIntoConstraints = false
     return c
   }()
-  
-  override func awakeFromNib() {
-    super.awakeFromNib()
-    backgroundColor = .white
-    contentView.addSubview(label)
-    contentView.addSubview(checkMark)
-    setContraints()
-  }
-  
+    
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
+        backgroundColor = .white
+        contentView.addSubview(label)
+        contentView.addSubview(checkMark)
+        setContraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func configure(with listModel: ListModel) {
         label.text = listModel.item
         checkMark.isHidden = !listModel.done

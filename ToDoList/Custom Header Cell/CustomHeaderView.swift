@@ -10,6 +10,9 @@ import UIKit
 
 class CustomHeaderView: UICollectionReusableView {
     
+    static let headerID = "reusableHeaderView"
+    
+    
     private let headerLabel:UILabel = {
         let headerLabel = UILabel()
         headerLabel.font = UIFont(name: "Helvetica", size: 20)
@@ -26,28 +29,19 @@ class CustomHeaderView: UICollectionReusableView {
         return headerView
     }()
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
         addSubview(headerView)
         setConstraints()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func configureHeader(with listModel:ListModelSection){
         
-        switch listModel.sectionName {
-        case "Mon":
-            headerLabel.text = "Monday"
-        case "Tue":
-            headerLabel.text = "Tuesday"
-        case "Wed":
-            headerLabel.text = "Wednesday"
-        case "Thu":
-            headerLabel.text = "Thursday"
-        case "Fri":
-            headerLabel.text = "Friday"
-        default:
-            headerLabel.text = ""
-        }
+        headerLabel.text = listModel.sectionName
     }
     
     private func setConstraints(){
