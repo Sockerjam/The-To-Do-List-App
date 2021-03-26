@@ -115,7 +115,6 @@ final class ToDoListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.collectionViewBackgroundColor
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
     }
   
   override func viewDidAppear(_ animated: Bool)  {
