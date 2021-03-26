@@ -11,12 +11,9 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    /// Check if user has laucnhed the App once
-    var hasLaunched:Bool!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        hasLaunched = UserDefaults.standard.bool(forKey: "AppHasLaunched")
         
         return true
     }

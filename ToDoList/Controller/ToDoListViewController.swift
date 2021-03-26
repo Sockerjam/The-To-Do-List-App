@@ -18,8 +18,6 @@ final class ToDoListViewController: UIViewController {
   }
   
   // MARK: Private properties
-    
-    private let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
   
   private lazy var layout: UICollectionViewCompositionalLayout = {
     var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -150,17 +148,6 @@ final class ToDoListViewController: UIViewController {
     definesPresentationContext = true
     navigationController?.navigationBar.prefersLargeTitles = true
     
-    if !appDelegate.hasLaunched {
-        if let navigationBar = navigationController?.navigationBar {
-        navigationController?.navigationBar.addSubview(instructionLabel)
-            NSLayoutConstraint.activate([instructionLabel.topAnchor.constraint(equalTo: navigationBar.topAnchor, constant: 10 ), instructionLabel.centerXAnchor.constraint(equalTo: navigationBar.centerXAnchor)])
-            UILabel.animate(withDuration: 3) {
-                self.instructionLabel.alpha = 1
-            } completion: { (bool) in
-                UserDefaults.standard.setValue(true, forKey: "AppHasLaunched")
-            }
-    }
-    }
   }
   
   ///CollectionViewListConstraints
