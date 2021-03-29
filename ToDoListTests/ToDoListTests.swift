@@ -10,25 +10,6 @@ import XCTest
 @testable import ToDoList
 
 class ToDoListTests: XCTestCase {
-
-    var toDoListVC:ToDoListViewController!
-    var addItemVC:AddItemVC!
     
-    override func setUp() {
-        toDoListVC = ToDoListViewController(viewModel: ToDoListModelImpl())
-        addItemVC = AddItemVC(with: ToDoListModelImpl())
-    }
     
-    override func tearDown() {
-        toDoListVC = nil
-        addItemVC = nil
-    }
-    
-    func testViewController(){
-        if addItemVC.isBeingPresented {
-            XCTAssert(toDoListVC.navigationController?.topViewController == toDoListVC)
-            XCTAssert(addItemVC.navigationController?.topViewController == addItemVC)
-        }
-    }
-
 }

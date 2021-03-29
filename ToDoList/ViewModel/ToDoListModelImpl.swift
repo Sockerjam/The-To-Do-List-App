@@ -133,7 +133,7 @@ extension ToDoListModelImpl: ToDoListModel {
   }
   
   // Finds correct item to delete and toggle by finding correct Section and correct Item in that Section
-  private func deleteAndToggle (_ indexPath:IndexPath) -> ListModel {
+   private func deleteAndToggle (_ indexPath:IndexPath) -> ListModel {
     
     
     var itemArray = [ListModel]()
@@ -149,7 +149,7 @@ extension ToDoListModelImpl: ToDoListModel {
     return returnItem
   }
   
-  private func itemFinder(with selectedItem: ListModel) -> ListModel {
+ private func itemFinder(with selectedItem: ListModel) -> ListModel {
     
     var returnItem:ListModel?
     
