@@ -115,6 +115,10 @@ final class ToDoListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.collectionViewBackgroundColor
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        var calender = Calendar.current
+        calender.locale = Locale.autoupdatingCurrent
+        print(calender.weekdaySymbols)
     }
   
   override func viewDidAppear(_ animated: Bool)  {

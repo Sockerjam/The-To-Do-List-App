@@ -8,12 +8,14 @@ enum WeekDays {
   static let longNames: [String] = usable.map { longNameFor($0)}
   
   static func longNameFor(_ weekdayNumber: Int) -> String {
-      let calendar = Calendar.current
+      var calendar = Calendar.current
+    calendar.locale = Locale.autoupdatingCurrent
       return calendar.weekdaySymbols[weekdayNumber]
   }
   
   static func shortNameFor(_ weekdayNumber: Int) -> String {
-      let calendar = Calendar.current
+      var calendar = Calendar.current
+    calendar.locale = Locale.autoupdatingCurrent
     return calendar.shortWeekdaySymbols[weekdayNumber]
   }
 }

@@ -16,6 +16,7 @@ final class ToDoListModelImpl {
   
   private var listItems = [ListModel]()
   
+    ///Is this being used?
   private var sectionObjects = [ListModelSection]()
   
   private func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
@@ -30,10 +31,13 @@ final class ToDoListModelImpl {
   private func groupAndSort(items: [ListModel]) -> [ListModelSection] {
     
     let dict = Dictionary(grouping: items) { $0.onDay }
-      .mapValues { items -> ListModelSection in
+        .mapValues { items -> ListModelSection in
         let onDayIndex = WeekDays.longNames.firstIndex(of: items.first?.onDay ?? "") ?? 0
+            print(onDayIndex)
         return ListModelSection(sectionName: WeekDays.longNames[onDayIndex], items: items)
       }
+    
+    print(dict)
     
     return dict.values.sorted {
       WeekDays.longNames.firstIndex(of: $0.sectionName) ?? 0 < WeekDays.longNames.firstIndex(of: $1.sectionName) ?? 0
@@ -101,20 +105,7 @@ extension ToDoListModelImpl: ToDoListModel {
     //Create new NSManagedObject for DataModel
     let toDo = ListModel(context: context)
     toDo.item = item
-    switch weekday {
-    case "Mon":
-        toDo.onDay = "Monday"
-    case "Tue":
-        toDo.onDay = "Tuesday"
-    case "Wed":
-        toDo.onDay = "Wednesday"
-    case "Thu":
-        toDo.onDay = "Thursday"
-    case "Fri":
-        toDo.onDay = "Friday"
-    default:
-        return
-    }
+    toDo.onDay = weekday
     ///Saves new Data through the Context
     saveData()
     loadData()
