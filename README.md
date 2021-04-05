@@ -5,3 +5,5 @@ An interactive To-Do List App built using UICollectionView List Layout, MVVM des
 Search for specific items on your list.
 
 Swipe to add Checkmark or Delete item from list completely.
+
+Supports your language
