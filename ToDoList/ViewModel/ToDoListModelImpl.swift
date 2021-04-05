@@ -16,9 +16,6 @@ final class ToDoListModelImpl {
   
   private var listItems = [ListModel]()
   
-    ///Is this being used?
-  private var sectionObjects = [ListModelSection]()
-  
   private func loadData(with request: NSFetchRequest<ListModel> = ListModel.fetchRequest()){
     do{
       listItems = try context.fetch(request)
@@ -33,12 +30,9 @@ final class ToDoListModelImpl {
     let dict = Dictionary(grouping: items) { $0.onDay }
         .mapValues { items -> ListModelSection in
         let onDayIndex = WeekDays.longNames.firstIndex(of: items.first?.onDay ?? "") ?? 0
-            print(onDayIndex)
         return ListModelSection(sectionName: WeekDays.longNames[onDayIndex], items: items)
       }
-    
-    print(dict)
-    
+
     return dict.values.sorted {
       WeekDays.longNames.firstIndex(of: $0.sectionName) ?? 0 < WeekDays.longNames.firstIndex(of: $1.sectionName) ?? 0
     }
@@ -76,9 +70,6 @@ final class ToDoListModelImpl {
 
 //MARK: - ToDoListModel
 extension ToDoListModelImpl: ToDoListModel {
-  var itemModels: [ListModelSection] {
-    sectionObjects
-  }
   
   var items:[ListModel] {
     listItems
