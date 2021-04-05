@@ -64,6 +64,7 @@
 		92982C4D25A31A1200C9DDAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92A67677261B173F00D27033 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		92A6767B261B179700D27033 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		92A67689261B3CA600D27033 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		92B4ED7F25AC84A2004BB257 /* ToDoListModelImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListModelImpl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -383,6 +384,7 @@
 				92982C4B25A31A1200C9DDAD /* Base */,
 				92A67677261B173F00D27033 /* es */,
 				92A6767B261B179700D27033 /* sv */,
+				92A67689261B3CA600D27033 /* en */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -603,7 +605,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.niclasjeppsson.to-do-list";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.niclasjeppsson.the-task-completer";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -624,7 +626,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.niclasjeppsson.to-do-list";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.niclasjeppsson.the-task-completer";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
